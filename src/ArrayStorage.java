@@ -17,43 +17,31 @@ public class ArrayStorage {
         storage[elemCount++] = r;
     }
 
-    Resume get(String uuid) {
+    /**
+     * @return Index of matching element of storage[], or -1 (not found)
+     */
+    private int lookupByUUID(String uuid) {
         for (int i = 0; i < elemCount; i++) {
-            final Resume resume = storage[i];
-            if (resume.uuid.equals(uuid)) {
-                return resume;
+            if (storage[i].uuid.equals(uuid)) {
+                return i;
             }
         }
+        return -1;
+    }
 
-        // not found
-        return null;
+    Resume get(String uuid) {
+        final int idx = lookupByUUID(uuid);
+        return (idx != -1) ? storage[idx] : null;
     }
 
     void delete(String uuid) {
-        // find array index by uuid
-        int targetIdx = -1;
-        for (int i = 0; i < elemCount; i++) {
-            if (storage[i].uuid.equals(uuid)) {
-                targetIdx = i;
-                break;
+        final int targetIdx = lookupByUUID(uuid);
+        if (targetIdx != -1) {
+            if (targetIdx < (elemCount - 1)) {
+                System.arraycopy(storage, targetIdx + 1, storage, targetIdx, elemCount - (targetIdx + 1));
             }
+            storage[--elemCount] = null;
         }
-
-        // not found, no action required
-        if (targetIdx == -1) {
-            return;
-        }
-
-        // shift elements, remove duplicated last element, shrink storage:
-        // [ a b target d e ... ] -- > [ a b d e NULL ... ]
-        if (targetIdx < (elemCount - 1)) {
-            System.arraycopy(
-                    storage, targetIdx + 1,
-                    storage, targetIdx,
-                    elemCount - (targetIdx + 1)
-                    );
-        }
-        storage[--elemCount] = null;
     }
 
     /**

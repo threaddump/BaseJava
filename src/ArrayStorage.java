@@ -13,20 +13,8 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
-        // storage overflow if (count == storage.length)
+        // storage overflow if (elemCount == storage.length)
         storage[elemCount++] = r;
-    }
-
-    /**
-     * @return Index of matching element of storage[], or -1 (not found)
-     */
-    private int lookupByUUID(String uuid) {
-        for (int i = 0; i < elemCount; i++) {
-            if (storage[i].uuid.equals(uuid)) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     Resume get(String uuid) {
@@ -53,5 +41,17 @@ public class ArrayStorage {
 
     int size() {
         return elemCount;
+    }
+
+    /**
+     * @return Index of matching element of storage[], or -1 (not found)
+     */
+    private int lookupByUUID(String uuid) {
+        for (int i = 0; i < elemCount; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

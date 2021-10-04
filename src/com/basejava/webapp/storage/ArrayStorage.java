@@ -16,16 +16,23 @@ public class ArrayStorage {
         size = 0;
     }
 
+    public void update(Resume r) {
+        final int idx = findIndex(r.getUuid());
+        if (idx == -1) {
+            System.err.println("ArrayStorage.update(): uuid " + r.getUuid() + " not found");
+        } else {
+            storage[idx] = r;
+        }
+    }
+
     public void save(Resume r) {
         if (findIndex(r.getUuid()) != -1) {
             System.err.println("ArrayStorage.save(): duplicate uuid " + r.getUuid() + ". Use update() instead");
-            return;
-        }
-        if (size == storage.length) {
+        } else if (size == storage.length) {
             System.err.println("ArrayStorage.save(): out of free space");
-            return;
+        } else {
+            storage[size++] = r;
         }
-        storage[size++] = r;
     }
 
     public Resume get(String uuid) {
@@ -35,15 +42,6 @@ public class ArrayStorage {
             return null;
         }
         return storage[idx];
-    }
-
-    public void update(Resume r) {
-        final int idx = findIndex(r.getUuid());
-        if (idx == -1) {
-            System.err.println("ArrayStorage.update(): uuid " + r.getUuid() + " not found");
-            return;
-        }
-        storage[idx] = r;
     }
 
     public void delete(String uuid) {

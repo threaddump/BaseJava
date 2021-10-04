@@ -30,32 +30,30 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         final int idx = findIndex(uuid);
-        if (idx != -1) {
-            return storage[idx];
-        } else {
+        if (idx == -1) {
             System.err.println("ArrayStorage.get(): uuid " + uuid + " not found");
             return null;
         }
+        return storage[idx];
     }
 
     public void update(Resume r) {
         final int idx = findIndex(r.getUuid());
-        if (idx != -1) {
-            storage[idx] = r;
-        } else {
+        if (idx == -1) {
             System.err.println("ArrayStorage.update(): uuid " + r.getUuid() + " not found");
+            return;
         }
+        storage[idx] = r;
     }
 
     public void delete(String uuid) {
         final int idx = findIndex(uuid);
-        if (idx != -1) {
-            storage[idx] = storage[size - 1];
-            storage[--size] = null;
-            return;
-        } else {
+        if (idx == -1) {
             System.err.println("ArrayStorage.delete(): uuid " + uuid + " not found");
+            return;
         }
+        storage[idx] = storage[size - 1];
+        storage[--size] = null;
     }
 
     /**

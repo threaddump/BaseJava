@@ -7,10 +7,7 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage implements Storage {
-    private static final int STORAGE_LIMIT = 10000;
-    private Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size;
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -18,37 +15,30 @@ public class ArrayStorage implements Storage {
     }
 
     public void update(Resume r) {
-        final int idx = findIndex(r.getUuid());
+        final String uuid = r.getUuid();
+        final int idx = findIndex(uuid);
         if (idx == -1) {
-            System.err.println("ArrayStorage.update(): uuid " + r.getUuid() + " not found");
+            System.out.println("Resume " + uuid + " does not exist");
         } else {
             storage[idx] = r;
         }
     }
 
     public void save(Resume r) {
-        if (findIndex(r.getUuid()) != -1) {
-            System.err.println("ArrayStorage.save(): duplicate uuid " + r.getUuid() + ". Use update() instead");
+        final String uuid = r.getUuid();
+        if (findIndex(uuid) != -1) {
+            System.out.println("Resume " + uuid + " already exist");
         } else if (size == STORAGE_LIMIT) {
-            System.err.println("ArrayStorage.save(): out of free space");
+            System.out.println("ArrayStorage.save(): out of free space");
         } else {
             storage[size++] = r;
         }
     }
 
-    public Resume get(String uuid) {
-        final int idx = findIndex(uuid);
-        if (idx == -1) {
-            System.err.println("ArrayStorage.get(): uuid " + uuid + " not found");
-            return null;
-        }
-        return storage[idx];
-    }
-
     public void delete(String uuid) {
         final int idx = findIndex(uuid);
         if (idx == -1) {
-            System.err.println("ArrayStorage.delete(): uuid " + uuid + " not found");
+            System.out.println("Resume " + uuid + " does not exist");
             return;
         }
         storage[idx] = storage[size - 1];
@@ -62,14 +52,7 @@ public class ArrayStorage implements Storage {
         return Arrays.copyOf(storage, size);
     }
 
-    public int size() {
-        return size;
-    }
-
-    /**
-     * @return Index of matching element of storage[], or -1 (not found)
-     */
-    private int findIndex(String uuid) {
+    protected int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;

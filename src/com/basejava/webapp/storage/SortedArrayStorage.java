@@ -5,29 +5,22 @@ import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
-    @Override
-    public void clear() {
 
+    @Override
+    protected void saveInternal(Resume r) {
+        // Arrays.binarySearch returns (-insertionPoint - 1) when key is not found.
+        int idx = -findIndex(r.getUuid()) - 1;
+        System.arraycopy(storage, idx, storage, idx + 1, size - idx);
+        storage[idx] = r;
+        size++;
     }
 
     @Override
-    public void update(Resume r) {
-
-    }
-
-    @Override
-    public void save(Resume r) {
-
-    }
-
-    @Override
-    public void delete(String uuid) {
-
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return new Resume[0];
+    protected void deleteInternal(int idx) {
+        if (idx < (size - 1)) {
+            System.arraycopy(storage, idx + 1, storage, idx, size - (idx + 1));
+        }
+        storage[--size] = null;
     }
 
     @Override

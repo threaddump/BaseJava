@@ -27,9 +27,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     protected Integer findKey(String uuid) {
         return Arrays.binarySearch(
                 storage, 0, size,
-                new Resume("ignored", uuid),
+                new Resume(uuid, "ignored"),
 
-                // NOTE: otherwise tests crash. wtf?
+                // TODO: clarify why 4 tests crash if using Resume.compareTo()
                 Comparator.comparing(Resume::getUuid)
                 );
     }

@@ -12,17 +12,11 @@ public class Resume implements Comparable<Resume> {
 
     private final String fullName;
 
-    // TODO: decide if ctors should be changed
-
-    public Resume() {
-        this("NoName NoSurname");
-    }
-
     public Resume(String fullName) {
-        this(fullName, UUID.randomUUID().toString());
+        this(UUID.randomUUID().toString(), fullName);
     }
 
-    public Resume(String fullName, String uuid) {
+    public Resume(String uuid, String fullName) {
         this.fullName = fullName;
         this.uuid = uuid;
     }

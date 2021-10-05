@@ -16,6 +16,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
+    // narrow type of return value
+    protected abstract Integer findKey(String uuid);
+
     @Override
     protected boolean exist(Object key) {
         return ((Integer) key) >= 0;

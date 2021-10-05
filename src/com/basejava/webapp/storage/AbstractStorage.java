@@ -6,41 +6,53 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class AbstractStorage<KeyType> implements Storage {
 
+    private static final Logger LOGGER = Logger.getLogger(AbstractStorage.class.getName());
+
     public final void update(Resume r) {
+        LOGGER.info("update(): r=" + r);
         final KeyType key = findKeyChecked(r.getUuid(), true);
         updateImpl(key, r);
     }
 
     public final void save(Resume r) {
+        LOGGER.info("save(): r=" + r);
         final KeyType key = findKeyChecked(r.getUuid(), false);
         saveImpl(key, r);
     }
 
     public final Resume get(String uuid) {
+        LOGGER.info("get(): uuid=" + uuid);
         final KeyType key = findKeyChecked(uuid, true);
         return getImpl(key);
     }
 
     public final void delete(String uuid) {
+        LOGGER.info("delete(): uuid=" + uuid);
         final KeyType key = findKeyChecked(uuid, true);
         deleteImpl(key);
     }
 
     private KeyType findKeyChecked(String uuid, boolean shouldExist) {
         final KeyType key = findKey(uuid);
-        final boolean exist = exist(key);
-        if (shouldExist && !exist) {
+        final boolean doesExist = exist(key);
+        if (doesExist == shouldExist) {
+            return key;
+        }
+        LOGGER.warning("findKeyChecked(): uuid=" + uuid +
+                "; doesExist=" + doesExist + "; shouldExist=" + shouldExist);
+        if (shouldExist && !doesExist) {
             throw new NotExistStorageException(uuid);
-        } else if (!shouldExist && exist) {
+        } else /* if (!shouldExist && doesExist) */ {
             throw new ExistStorageException(uuid);
         }
-        return key;
     }
 
     public List<Resume> getAllSorted() {
+        LOGGER.info("getAllSorted()");
         List<Resume> resumes = getAllImpl();
         Collections.sort(resumes);
         return resumes;

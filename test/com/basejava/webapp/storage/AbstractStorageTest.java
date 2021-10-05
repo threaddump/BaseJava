@@ -2,7 +2,6 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +12,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
-    private Storage storage;
+    protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final Resume RESUME_1 = new Resume(UUID_1);
@@ -70,19 +69,6 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_1);
     }
 
-    @Test(expected = StorageException.class)
-    public void saveOverflow() {
-        try {
-            for (int i = 0; i < (AbstractArrayStorage.STORAGE_LIMIT - 3); i++) {
-                storage.save(new Resume());
-            }
-        } catch (StorageException e) {
-            Assert.fail("Early overflow");
-        }
-        assertSize(AbstractArrayStorage.STORAGE_LIMIT);
-        storage.save(new Resume());
-    }
-
     @Test
     public void get() {
         assertGet(RESUME_1);
@@ -126,7 +112,7 @@ public abstract class AbstractStorageTest {
         assertEquals(r, storage.get(r.getUuid()));
     }
 
-    private void assertSize(int size) {
+    protected void assertSize(int size) {
         assertEquals(size, storage.size());
     }
 }

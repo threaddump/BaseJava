@@ -1,4 +1,4 @@
-package com.basejava.webapp;
+package com.basejava.webapp.drafts;
 
 public class MainString {
     public static void main(String[] args) {

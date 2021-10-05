@@ -1,4 +1,4 @@
-package com.basejava.webapp;
+package com.basejava.webapp.drafts;
 
 import com.basejava.webapp.model.Resume;
 

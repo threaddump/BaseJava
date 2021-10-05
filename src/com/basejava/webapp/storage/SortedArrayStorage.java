@@ -7,20 +7,19 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void saveInternal(Resume r) {
+    protected void insertElem(Resume r, int idx) {
         // Arrays.binarySearch returns (-insertionPoint - 1) when key is not found.
-        int idx = -findIndex(r.getUuid()) - 1;
-        System.arraycopy(storage, idx, storage, idx + 1, size - idx);
-        storage[idx] = r;
-        size++;
+        int targetIdx = -idx - 1;
+        System.arraycopy(storage, targetIdx, storage, targetIdx + 1, size - targetIdx);
+        storage[targetIdx] = r;
     }
 
     @Override
-    protected void deleteInternal(int idx) {
-        if (idx < (size - 1)) {
-            System.arraycopy(storage, idx + 1, storage, idx, size - (idx + 1));
+    protected void fillDeletedElem(int idx) {
+        int tailLen = size - (idx + 1);
+        if (tailLen > 0) {
+            System.arraycopy(storage, idx + 1, storage, idx, tailLen);
         }
-        storage[--size] = null;
     }
 
     @Override

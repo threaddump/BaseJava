@@ -24,10 +24,6 @@ public class ArrayStorage extends AbstractArrayStorage {
                 return i;
             }
         }
-
-        // "return new Integer(-1);" is also possible.
-        // "return Integer.valueOf(-1);" uses cached object.
-        // "return -1;" will use automatic boxing.
         return -1;
     }
 }

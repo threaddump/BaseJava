@@ -1,5 +1,6 @@
 package com.basejava.webapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -17,6 +18,8 @@ public class Resume implements Comparable<Resume> {
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.fullName = fullName;
         this.uuid = uuid;
     }
@@ -28,8 +31,6 @@ public class Resume implements Comparable<Resume> {
     public String getFullName() {
         return fullName;
     }
-
-    // TODO: decide which fields to use in equals() and hashCode()
 
     @Override
     public boolean equals(Object o) {
@@ -59,8 +60,7 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int compareTo(Resume o) {
-        int result = fullName.compareTo(o.fullName);
-        result = (result == 0) ? uuid.compareTo(o.uuid) : result;
-        return result;
+        final int cmp = fullName.compareTo(o.fullName);
+        return (cmp == 0) ? uuid.compareTo(o.uuid) : cmp;
     }
 }

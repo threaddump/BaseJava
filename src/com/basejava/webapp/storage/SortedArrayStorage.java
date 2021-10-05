@@ -25,11 +25,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Integer findKey(String uuid) {
+        Resume searchKey = new Resume(uuid, "ignored");
         return Arrays.binarySearch(
-                storage, 0, size,
-                new Resume(uuid, "ignored"),
-
-                // TODO: clarify why 4 tests crash if using Resume.compareTo()
+                storage, 0, size, searchKey,
                 Comparator.comparing(Resume::getUuid)
                 );
     }

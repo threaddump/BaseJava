@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 import static org.junit.Assert.assertEquals;
 
@@ -97,7 +98,12 @@ public abstract class AbstractStorageTest {
     public void getAll() {
         Resume[] actualResumes = storage.getAll();
         assertEquals(3, actualResumes.length);
-        Arrays.sort(actualResumes);
+        Arrays.sort(actualResumes, new Comparator<Resume>() {
+            @Override
+            public int compare(Resume o1, Resume o2) {
+                return o1.getUuid().compareTo(o2.getUuid());
+            }
+        });
 
         Resume[] targetResumes = new Resume[] {RESUME_1, RESUME_2, RESUME_3};
         Assert.assertArrayEquals(targetResumes, actualResumes);

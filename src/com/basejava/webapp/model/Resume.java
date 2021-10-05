@@ -1,19 +1,26 @@
 package com.basejava.webapp.model;
 
+import java.util.UUID;
+
 /**
  * Initial resume class
  */
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
-    private String uuid;
+    private final String uuid;
+
+    public Resume() {
+        // delegate object construction to 2nd ctor
+        this(UUID.randomUUID().toString());
+    }
+
+    public Resume(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getUuid() {
         return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     @Override

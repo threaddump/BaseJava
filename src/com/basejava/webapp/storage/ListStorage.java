@@ -1,14 +1,13 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage implements Storage {
-    private List<Resume> storage = new LinkedList<>();
+public class ListStorage extends AbstractStorage {
+    //private List<Resume> storage = new LinkedList<>();
+    private List<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -16,48 +15,40 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public void update(Resume r) {
-        final String uuid = r.getUuid();
+    protected Integer findKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
-                storage.set(i, r);
-                return;
+                return i;
             }
         }
-        throw new NotExistStorageException(uuid);
+        return -1;
     }
 
     @Override
-    public void save(Resume r) {
-        final String uuid = r.getUuid();
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
-                throw new ExistStorageException(uuid);
-            }
-        }
+    protected boolean exist(Object key) {
+        return ((Integer) key) >= 0;
+    }
+
+    @Override
+    protected void updateImpl(Object key, Resume r) {
+        storage.set((Integer) key, r);
+    }
+
+    @Override
+    protected void saveImpl(Object key, Resume r) {
         storage.add(r);
     }
 
     @Override
-    public Resume get(String uuid) {
-        for (int i = 0; i < storage.size(); i++) {
-            Resume r = storage.get(i);
-            if (r.getUuid().equals(uuid)) {
-                return r;
-            }
-        }
-        throw new NotExistStorageException(uuid);
+    protected Resume getImpl(Object key) {
+        return storage.get((Integer) key);
     }
 
     @Override
-    public void delete(String uuid) {
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i).getUuid().equals(uuid)) {
-                storage.remove(i);
-                return;
-            }
-        }
-        throw new NotExistStorageException(uuid);
+    protected void deleteImpl(Object key) {
+        // NOTE (EL): remove((Integer) key) calls remove(Object), but we need remove(int)
+        final int idx = (Integer) key;
+        storage.remove(idx);
     }
 
     @Override

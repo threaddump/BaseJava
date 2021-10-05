@@ -1,13 +1,11 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
-import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -18,45 +16,42 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
-    public void update(Resume r) {
-        final String uuid = r.getUuid();
-        final int idx = findIndex(uuid);
-        if (idx < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            storage[idx] = r;
-        }
+    @Override
+    protected boolean exist(Object key) {
+        return ((Integer) key) >= 0;
     }
 
-    public void save(Resume r) {
-        final String uuid = r.getUuid();
-        final int idx = findIndex(uuid);
-        if (idx >= 0) {
-            throw new ExistStorageException(uuid);
-        } else if (size == STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", uuid);
-        } else {
-            insertElem(r, idx);
-            size++;
-        }
+    @Override
+    protected void updateImpl(Object key, Resume r) {
+        storage[(Integer) key] = r;
     }
 
-    public Resume get(String uuid) {
-        final int idx = findIndex(uuid);
-        if (idx < 0) {
-            throw new NotExistStorageException(uuid);
+    @Override
+    protected void saveImpl(Object key, Resume r) {
+        if (STORAGE_LIMIT == size) {
+            throw new StorageException("Storage overflow", r.getUuid());
         }
-        return storage[idx];
+        insertElem((Integer) key, r);
+        size++;
     }
 
-    public void delete(String uuid) {
-        final int idx = findIndex(uuid);
-        if (idx < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        fillDeletedElem(idx);
+    protected abstract void insertElem(int idx, Resume r);
+
+    @Override
+    protected Resume getImpl(Object key) {
+        return storage[(Integer) key];
+    }
+
+    @Override
+    protected void deleteImpl(Object key) {
+        fillDeletedElem((Integer) key);
         storage[--size] = null;
     }
+
+    /**
+     * Remove entry from storage and maintain its continuity.
+     */
+    protected abstract void fillDeletedElem(int idx);
 
     /**
      * @return array, contains only Resumes in storage (without null)
@@ -68,16 +63,4 @@ public abstract class AbstractArrayStorage implements Storage {
     public int size() {
         return size;
     }
-
-    protected abstract void insertElem(Resume r, int idx);
-
-    /**
-     * Remove entry from storage and maintain its continuity.
-     */
-    protected abstract void fillDeletedElem(int idx);
-
-    /**
-     * @return Index of matching element of storage[], or negative number (not found).
-     */
-    protected abstract int findIndex(String uuid);
 }

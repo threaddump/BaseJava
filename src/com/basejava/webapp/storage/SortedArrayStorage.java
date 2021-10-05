@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void insertElem(Resume r, int idx) {
+    protected void insertElem(int idx, Resume r) {
         // Arrays.binarySearch returns (-insertionPoint - 1) when key is not found.
         int targetIdx = -idx - 1;
         System.arraycopy(storage, targetIdx, storage, targetIdx + 1, size - targetIdx);
@@ -23,7 +23,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected int findIndex(String uuid) {
+    protected Integer findKey(String uuid) {
         return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
     }
 }

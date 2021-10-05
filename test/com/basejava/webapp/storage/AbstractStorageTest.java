@@ -12,8 +12,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-// Test and tested class are in the same pkg, so protected members are available.
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractStorageTest {
     private Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -28,7 +27,7 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_4 = "uuid4";
     private static final Resume RESUME_4 = new Resume(UUID_4);
 
-    protected AbstractArrayStorageTest(Storage storage) {
+    protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -66,6 +65,11 @@ public abstract class AbstractArrayStorageTest {
         assertGet(RESUME_4);
     }
 
+    @Test(expected = ExistStorageException.class)
+    public void saveAlreadyExist() {
+        storage.save(RESUME_1);
+    }
+
     @Test(expected = StorageException.class)
     public void saveOverflow() {
         try {
@@ -77,11 +81,6 @@ public abstract class AbstractArrayStorageTest {
         }
         assertSize(AbstractArrayStorage.STORAGE_LIMIT);
         storage.save(new Resume());
-    }
-
-    @Test(expected = ExistStorageException.class)
-    public void saveAlreadyExist() {
-        storage.save(RESUME_1);
     }
 
     @Test

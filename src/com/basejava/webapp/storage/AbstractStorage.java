@@ -7,30 +7,30 @@ import com.basejava.webapp.model.Resume;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<KeyType> implements Storage {
 
     public final void update(Resume r) {
-        final Object key = findKeyChecked(r.getUuid(), true);
+        final KeyType key = findKeyChecked(r.getUuid(), true);
         updateImpl(key, r);
     }
 
     public final void save(Resume r) {
-        final Object key = findKeyChecked(r.getUuid(), false);
+        final KeyType key = findKeyChecked(r.getUuid(), false);
         saveImpl(key, r);
     }
 
     public final Resume get(String uuid) {
-        final Object key = findKeyChecked(uuid, true);
+        final KeyType key = findKeyChecked(uuid, true);
         return getImpl(key);
     }
 
     public final void delete(String uuid) {
-        final Object key = findKeyChecked(uuid, true);
+        final KeyType key = findKeyChecked(uuid, true);
         deleteImpl(key);
     }
 
-    private Object findKeyChecked(String uuid, boolean shouldExist) {
-        final Object key = findKey(uuid);
+    private KeyType findKeyChecked(String uuid, boolean shouldExist) {
+        final KeyType key = findKey(uuid);
         final boolean exist = exist(key);
         if (shouldExist && !exist) {
             throw new NotExistStorageException(uuid);
@@ -46,17 +46,17 @@ public abstract class AbstractStorage implements Storage {
         return resumes;
     }
 
-    protected abstract Object findKey(String uuid);
+    protected abstract KeyType findKey(String uuid);
 
-    protected abstract boolean exist(Object key);
+    protected abstract boolean exist(KeyType key);
 
-    protected abstract void updateImpl(Object key, Resume r);
+    protected abstract void updateImpl(KeyType key, Resume r);
 
-    protected abstract void saveImpl(Object key, Resume r);
+    protected abstract void saveImpl(KeyType key, Resume r);
 
-    protected abstract Resume getImpl(Object key);
+    protected abstract Resume getImpl(KeyType key);
 
-    protected abstract void deleteImpl(Object key);
+    protected abstract void deleteImpl(KeyType key);
 
     protected abstract List<Resume> getAllImpl();
 }

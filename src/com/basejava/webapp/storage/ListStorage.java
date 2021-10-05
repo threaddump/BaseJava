@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
@@ -20,34 +20,33 @@ public class ListStorage extends AbstractStorage {
                 return i;
             }
         }
-        return -1;
+        return null;
     }
 
     @Override
-    protected boolean exist(Object key) {
-        return ((Integer) key) >= 0;
+    protected boolean exist(Integer key) {
+        return key != null;
     }
 
     @Override
-    protected void updateImpl(Object key, Resume r) {
-        storage.set((Integer) key, r);
+    protected void updateImpl(Integer key, Resume r) {
+        storage.set(key, r);
     }
 
     @Override
-    protected void saveImpl(Object key, Resume r) {
+    protected void saveImpl(Integer key, Resume r) {
         storage.add(r);
     }
 
     @Override
-    protected Resume getImpl(Object key) {
-        return storage.get((Integer) key);
+    protected Resume getImpl(Integer key) {
+        return storage.get(key);
     }
 
     @Override
-    protected void deleteImpl(Object key) {
+    protected void deleteImpl(Integer key) {
         // NOTE (EL): remove((Integer) key) calls remove(Object), but we need remove(int)
-        final int idx = (Integer) key;
-        storage.remove(idx);
+        storage.remove(key.intValue());
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -16,38 +16,37 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    // narrow type of return value
     protected abstract Integer findKey(String uuid);
 
     @Override
-    protected boolean exist(Object key) {
-        return ((Integer) key) >= 0;
+    protected boolean exist(Integer idx) {
+        return idx >= 0;
     }
 
     @Override
-    protected void updateImpl(Object key, Resume r) {
-        storage[(Integer) key] = r;
+    protected void updateImpl(Integer idx, Resume r) {
+        storage[idx] = r;
     }
 
     @Override
-    protected void saveImpl(Object key, Resume r) {
+    protected void saveImpl(Integer idx, Resume r) {
         if (STORAGE_LIMIT == size) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertElem((Integer) key, r);
+        insertElem(idx, r);
         size++;
     }
 
     protected abstract void insertElem(int idx, Resume r);
 
     @Override
-    protected Resume getImpl(Object key) {
-        return storage[(Integer) key];
+    protected Resume getImpl(Integer idx) {
+        return storage[idx];
     }
 
     @Override
-    protected void deleteImpl(Object key) {
-        fillDeletedElem((Integer) key);
+    protected void deleteImpl(Integer idx) {
+        fillDeletedElem(idx);
         storage[--size] = null;
     }
 

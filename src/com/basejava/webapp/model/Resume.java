@@ -5,23 +5,37 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
-public class Resume /* implements Comparable<Resume> */ {
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private final String uuid;
 
+    private final String fullName;
+
+    // TODO: decide if ctors should be changed
+
     public Resume() {
-        // delegate object construction to 2nd ctor
-        this(UUID.randomUUID().toString());
+        this("NoName NoSurname");
     }
 
-    public Resume(String uuid) {
+    public Resume(String fullName) {
+        this(fullName, UUID.randomUUID().toString());
+    }
+
+    public Resume(String fullName, String uuid) {
+        this.fullName = fullName;
         this.uuid = uuid;
     }
 
     public String getUuid() {
         return uuid;
     }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    // TODO: decide which fields to use in equals() and hashCode()
 
     @Override
     public boolean equals(Object o) {
@@ -30,23 +44,29 @@ public class Resume /* implements Comparable<Resume> */ {
 
         Resume resume = (Resume) o;
 
-        return uuid.equals(resume.uuid);
+        if (!uuid.equals(resume.uuid)) return false;
+        return fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return uuid;
+        return "Resume{" +
+                "uuid='" + uuid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
     }
 
-    /*
     @Override
-    public int compareTo(Resume r) {
-        return uuid.compareTo(r.uuid);
+    public int compareTo(Resume o) {
+        int result = fullName.compareTo(o.fullName);
+        result = (result == 0) ? uuid.compareTo(o.uuid) : result;
+        return result;
     }
-    */
 }

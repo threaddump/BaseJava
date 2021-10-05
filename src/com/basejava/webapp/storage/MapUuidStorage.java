@@ -2,10 +2,12 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
@@ -44,13 +46,10 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        Resume[] result = new Resume[size()];
-        int idx = 0;
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            result[idx++] = entry.getValue();
-        }
-        return result;
+    protected List<Resume> getAllImpl() {
+        List<Resume> resumes = new ArrayList<>();
+        resumes.addAll(storage.values());
+        return resumes;
     }
 
     @Override

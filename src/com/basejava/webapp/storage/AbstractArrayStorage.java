@@ -3,7 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
-import java.util.Arrays;
+import java.util.*;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
@@ -56,11 +56,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
      */
     protected abstract void fillDeletedElem(int idx);
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+    @Override
+    protected List<Resume> getAllImpl() {
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     public int size() {

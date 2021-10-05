@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,16 +16,16 @@ public abstract class AbstractStorageTest {
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
-    private static final Resume RESUME_1 = new Resume(UUID_1);
+    private static final Resume RESUME_1 = new Resume("Name1", UUID_1);
 
     private static final String UUID_2 = "uuid2";
-    private static final Resume RESUME_2 = new Resume(UUID_2);
+    private static final Resume RESUME_2 = new Resume("Name2", UUID_2);
 
     private static final String UUID_3 = "uuid3";
-    private static final Resume RESUME_3 = new Resume(UUID_3);
+    private static final Resume RESUME_3 = new Resume("Name3", UUID_3);
 
     private static final String UUID_4 = "uuid4";
-    private static final Resume RESUME_4 = new Resume(UUID_4);
+    private static final Resume RESUME_4 = new Resume("Name4", UUID_4);
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -42,12 +43,14 @@ public abstract class AbstractStorageTest {
     public void clear() {
         storage.clear();
         assertSize(0);
-        Assert.assertArrayEquals(new Resume[0], storage.getAll());
+
+        List<Resume> resumes = storage.getAllSorted();
+        Assert.assertTrue(resumes.isEmpty());
     }
 
     @Test
     public void update() {
-        final Resume r = new Resume(UUID_2);
+        final Resume r = new Resume("Name2_new", UUID_2);
         storage.update(r);
         Assert.assertTrue(r == storage.get(r.getUuid()));
     }
@@ -94,13 +97,9 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] actualResumes = storage.getAll();
-        assertEquals(3, actualResumes.length);
-        Arrays.sort(actualResumes, (o1, o2) -> o1.getUuid().compareTo(o2.getUuid()));
-
-        Resume[] targetResumes = new Resume[] {RESUME_1, RESUME_2, RESUME_3};
-        Assert.assertArrayEquals(targetResumes, actualResumes);
+    public void getAllSorted() {
+        List<Resume> resumes = storage.getAllSorted();
+        assertEquals(Arrays.asList(RESUME_1, RESUME_2, RESUME_3), resumes);
     }
 
     @Test

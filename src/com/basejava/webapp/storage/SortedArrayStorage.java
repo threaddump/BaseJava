@@ -7,9 +7,6 @@ import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    private static final Comparator RESUME_COMPARATOR = (Comparator<Resume>)
-            (o1, o2) -> o1.getUuid().compareTo(o2.getUuid());
-
     @Override
     protected void insertElem(int idx, Resume r) {
         // Arrays.binarySearch returns (-insertionPoint - 1) when key is not found.
@@ -28,6 +25,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Integer findKey(String uuid) {
-        return Arrays.binarySearch(storage, 0, size, new Resume(uuid), RESUME_COMPARATOR);
+        return Arrays.binarySearch(
+                storage, 0, size,
+                new Resume("ignored", uuid),
+
+                // NOTE: otherwise tests crash. wtf?
+                Comparator.comparing(Resume::getUuid)
+                );
     }
 }

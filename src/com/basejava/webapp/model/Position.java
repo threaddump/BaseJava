@@ -1,14 +1,20 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Position implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final TimeSpan timeSpan;
-    private final String title;
-    private final String description;
+    private TimeSpan timeSpan;
+    private String title;
+    private String description;
+
+    public Position() {
+    }
 
     public Position(TimeSpan timeSpan, String title, String description) {
         Objects.requireNonNull(timeSpan, "timeSpan must not be null");

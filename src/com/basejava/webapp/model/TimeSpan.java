@@ -1,14 +1,25 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TimeSpan implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final LocalDate begin;
-    private final LocalDate end;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate begin;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate end;
+
+    public TimeSpan() {
+    }
 
     public TimeSpan(LocalDate begin, LocalDate end) {
         Objects.requireNonNull(begin, "begin must not be null");

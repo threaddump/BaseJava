@@ -4,24 +4,24 @@ import java.util.Objects;
 
 public class Organization {
 
-    private final Href href;
+    private final Link link;
     private final TimeSpan timeSpan;
     private final String title;
     private final String description;
 
-    public Organization(Href href, TimeSpan timeSpan, String title, String description) {
-        Objects.requireNonNull(href, "href must not be null");
+    public Organization(Link link, TimeSpan timeSpan, String title, String description) {
+        Objects.requireNonNull(link, "link must not be null");
         Objects.requireNonNull(timeSpan, "timeSpan must not be null");
         Objects.requireNonNull(title, "title must not be null");
         Objects.requireNonNull(description, "description must not be null");
-        this.href = href;
+        this.link = link;
         this.timeSpan = timeSpan;
         this.title = title;
         this.description = description;
     }
 
-    public Href getHref() {
-        return href;
+    public Link getLink() {
+        return link;
     }
 
     public TimeSpan getTimeSpan() {
@@ -43,7 +43,7 @@ public class Organization {
 
         Organization that = (Organization) o;
 
-        if (!href.equals(that.href)) return false;
+        if (!link.equals(that.link)) return false;
         if (!timeSpan.equals(that.timeSpan)) return false;
         if (!title.equals(that.title)) return false;
         return description.equals(that.description);
@@ -51,7 +51,7 @@ public class Organization {
 
     @Override
     public int hashCode() {
-        int result = href.hashCode();
+        int result = link.hashCode();
         result = 31 * result + timeSpan.hashCode();
         result = 31 * result + title.hashCode();
         result = 31 * result + description.hashCode();
@@ -61,7 +61,7 @@ public class Organization {
     @Override
     public String toString() {
         return "Organization{" +
-                "href=" + href +
+                "link=" + link +
                 ", timeSpan=" + timeSpan +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

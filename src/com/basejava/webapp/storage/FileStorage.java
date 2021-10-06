@@ -32,7 +32,7 @@ public class FileStorage extends AbstractStorage<File> {
     private String[] listFilesChecked() {
         final String[] files = baseDir.list();
         if (files == null) {
-            throw new StorageException("Unable to read directory", null);
+            throw new StorageException("Unable to read directory");
         }
         return files;
     }

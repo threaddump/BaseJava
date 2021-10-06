@@ -4,13 +4,16 @@ import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.storage.strategy.StreamSerializer;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
 
@@ -29,19 +32,21 @@ public class PathStorage extends AbstractStorage<Path> {
         this.serializer = serializer;
     }
 
-    @Override
-    public void clear() {
+    private Stream<Path> listFilesChecked() {
         try {
-            Files.list(basePath).forEach(this::deleteImpl);
+            return Files.list(basePath);
         } catch (IOException e) {
-            throw new StorageException("Unable to clear directory", null, e);
+            throw new StorageException("Unable to read directory", e);
         }
     }
 
     @Override
-    protected Path findKey(String uuid) {
-        return Paths.get(basePath.toString(), uuid);
+    public void clear() {
+        listFilesChecked().forEach(this::deleteImpl);
     }
+
+    @Override
+    protected Path findKey(String uuid) { return basePath.resolve(uuid); }
 
     @Override
     protected boolean exist(Path path) {
@@ -87,19 +92,11 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAllImpl() {
-        try {
-            return Files.list(basePath).map(this::getImpl).collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new StorageException("Unable to read resume", null, e);
-        }
+        return listFilesChecked().map(this::getImpl).collect(Collectors.toList());
     }
 
     @Override
     public int size() {
-        try {
-            return (int) Files.list(basePath).count();
-        } catch (IOException e) {
-            throw new StorageException("Unable to read directory", null, e);
-        }
+        return (int) listFilesChecked().count();
     }
 }

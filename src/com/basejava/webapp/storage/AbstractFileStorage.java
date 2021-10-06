@@ -55,7 +55,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateImpl(File file, Resume r) {
         try {
-            writeFile(new BufferedOutputStream(new FileOutputStream(file)), r);
+            writeResume(new BufferedOutputStream(new FileOutputStream(file)), r);
         } catch (IOException e) {
             throw new StorageException("File write error", r.getUuid(), e);
         }
@@ -74,7 +74,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getImpl(File file) {
         try {
-            return readFile(new BufferedInputStream(new FileInputStream(file)));
+            return readResume(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
@@ -102,7 +102,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return listFilesChecked().length;
     }
 
-    protected abstract void writeFile(OutputStream os, Resume r) throws IOException;
+    protected abstract void writeResume(OutputStream os, Resume r) throws IOException;
 
-    protected abstract Resume readFile(InputStream is) throws IOException;
+    protected abstract Resume readResume(InputStream is) throws IOException;
 }

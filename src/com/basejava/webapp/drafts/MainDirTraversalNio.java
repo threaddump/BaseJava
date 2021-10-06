@@ -10,14 +10,14 @@ public class MainDirTraversalNio {
     public static void main(String[] args) throws IOException {
         final Path root = Paths.get("./").toAbsolutePath().normalize();
 
-        System.out.println("traverseUsingQueue(): ");
-        traverseUsingQueue(root);
+        //System.out.println("traverseUsingQueue(): ");
+        //traverseUsingQueue(root);
 
         System.out.println("traverseUsingRecursion(): ");
         traverseUsingRecursion(root, 0);
 
-        System.out.println("traverseUsingBuiltin(): ");
-        traverseUsingBuiltin(root);
+        //System.out.println("traverseUsingBuiltin(): ");
+        //traverseUsingBuiltin(root);
     }
 
     private static void traverseUsingQueue(Path root) throws IOException {

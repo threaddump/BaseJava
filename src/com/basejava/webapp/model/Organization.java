@@ -1,39 +1,31 @@
 package com.basejava.webapp.model;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Organization {
 
     private final Link link;
-    private final TimeSpan timeSpan;
-    private final String title;
-    private final String description;
+    private final List<Position> positions;
 
-    public Organization(Link link, TimeSpan timeSpan, String title, String description) {
+    public Organization(Link link, Position... positions) {
+        this(link, Arrays.asList(positions));
+    }
+
+    public Organization(Link link, List<Position> positions) {
         Objects.requireNonNull(link, "link must not be null");
-        Objects.requireNonNull(timeSpan, "timeSpan must not be null");
-        Objects.requireNonNull(title, "title must not be null");
-        // nulls in description are allowed intentionally
+        Objects.requireNonNull(positions, "positions must not be null");
         this.link = link;
-        this.timeSpan = timeSpan;
-        this.title = title;
-        this.description = description;
+        this.positions = positions;
     }
 
     public Link getLink() {
         return link;
     }
 
-    public TimeSpan getTimeSpan() {
-        return timeSpan;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
+    public List<Position> getPositions() {
+        return positions;
     }
 
     @Override
@@ -44,17 +36,13 @@ public class Organization {
         Organization that = (Organization) o;
 
         if (!link.equals(that.link)) return false;
-        if (!timeSpan.equals(that.timeSpan)) return false;
-        if (!title.equals(that.title)) return false;
-        return description != null ? description.equals(that.description) : that.description == null;
+        return positions.equals(that.positions);
     }
 
     @Override
     public int hashCode() {
         int result = link.hashCode();
-        result = 31 * result + timeSpan.hashCode();
-        result = 31 * result + title.hashCode();
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + positions.hashCode();
         return result;
     }
 
@@ -62,9 +50,7 @@ public class Organization {
     public String toString() {
         return "Organization{" +
                 "link=" + link +
-                ", timeSpan=" + timeSpan +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
+                ", positions=" + positions +
                 '}';
     }
 }

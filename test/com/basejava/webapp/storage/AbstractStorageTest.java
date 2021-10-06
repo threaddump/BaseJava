@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.drafts.ResumeTestData;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
@@ -16,16 +17,16 @@ public abstract class AbstractStorageTest {
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
-    private static final Resume RESUME_1 = new Resume(UUID_1, "Name1");
+    private static final Resume RESUME_1 = ResumeTestData.makeResume(UUID_1, "Name1");
 
     private static final String UUID_2 = "uuid2";
-    private static final Resume RESUME_2 = new Resume(UUID_2, "Name2");
+    private static final Resume RESUME_2 = ResumeTestData.makeResume(UUID_2, "Name2");
 
     private static final String UUID_3 = "uuid3";
-    private static final Resume RESUME_3 = new Resume(UUID_3, "Name3");
+    private static final Resume RESUME_3 = ResumeTestData.makeResume(UUID_3, "Name3");
 
     private static final String UUID_4 = "uuid4";
-    private static final Resume RESUME_4 = new Resume(UUID_4, "Name4");
+    private static final Resume RESUME_4 = ResumeTestData.makeResume(UUID_4, "Name4");
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -50,7 +51,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        final Resume r = new Resume(UUID_2, "Name2_new");
+        final Resume r = ResumeTestData.makeResume(UUID_2, "Name2_new");
         storage.update(r);
         Assert.assertTrue(r == storage.get(r.getUuid()));
     }

@@ -1,8 +1,11 @@
 package com.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Position {
+public class Position implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final TimeSpan timeSpan;
     private final String title;
     private final String description;

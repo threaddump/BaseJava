@@ -1,9 +1,11 @@
 package com.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class TimeSpan {
+public class TimeSpan implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final LocalDate begin;
     private final LocalDate end;

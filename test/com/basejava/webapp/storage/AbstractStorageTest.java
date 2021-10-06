@@ -14,6 +14,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
+
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -53,7 +54,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         final Resume r = ResumeTestData.makeResume(UUID_2, "Name2_new");
         storage.update(r);
-        Assert.assertTrue(r == storage.get(r.getUuid()));
+        Assert.assertTrue(r.equals(storage.get(r.getUuid())));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -108,9 +109,7 @@ public abstract class AbstractStorageTest {
         assertSize(3);
     }
 
-    private void assertGet(Resume r) {
-        assertEquals(r, storage.get(r.getUuid()));
-    }
+    private void assertGet(Resume r) { assertEquals(r, storage.get(r.getUuid())); }
 
     protected void assertSize(int size) {
         assertEquals(size, storage.size());

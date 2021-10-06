@@ -102,7 +102,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return listFilesChecked().length;
     }
 
-    protected abstract void writeFile(OutputStream file, Resume r) throws IOException;
+    protected abstract void writeFile(OutputStream os, Resume r) throws IOException;
 
-    protected abstract Resume readFile(InputStream filer) throws IOException;
+    protected abstract Resume readFile(InputStream is) throws IOException;
 }

@@ -9,7 +9,7 @@ public class Link {
 
     public Link(String title, String url) {
         Objects.requireNonNull(title, "title must not be null");
-        Objects.requireNonNull(url, "url must not be null");
+        // nulls in url are allowed intentionally
         this.title = title;
         this.url = url;
     }
@@ -30,13 +30,13 @@ public class Link {
         Link link = (Link) o;
 
         if (!title.equals(link.title)) return false;
-        return url.equals(link.url);
+        return url != null ? url.equals(link.url) : link.url == null;
     }
 
     @Override
     public int hashCode() {
         int result = title.hashCode();
-        result = 31 * result + url.hashCode();
+        result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }
 

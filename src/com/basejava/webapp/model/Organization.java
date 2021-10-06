@@ -13,7 +13,7 @@ public class Organization {
         Objects.requireNonNull(link, "link must not be null");
         Objects.requireNonNull(timeSpan, "timeSpan must not be null");
         Objects.requireNonNull(title, "title must not be null");
-        Objects.requireNonNull(description, "description must not be null");
+        // nulls in description are allowed intentionally
         this.link = link;
         this.timeSpan = timeSpan;
         this.title = title;
@@ -46,7 +46,7 @@ public class Organization {
         if (!link.equals(that.link)) return false;
         if (!timeSpan.equals(that.timeSpan)) return false;
         if (!title.equals(that.title)) return false;
-        return description.equals(that.description);
+        return description != null ? description.equals(that.description) : that.description == null;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Organization {
         int result = link.hashCode();
         result = 31 * result + timeSpan.hashCode();
         result = 31 * result + title.hashCode();
-        result = 31 * result + description.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
 

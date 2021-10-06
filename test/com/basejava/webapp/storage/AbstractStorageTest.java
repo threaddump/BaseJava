@@ -4,6 +4,7 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.model.ResumeTestData;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,8 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
+
+    protected static final String STORAGE_DIR = "storage/";
 
     protected Storage storage;
 
@@ -39,6 +42,11 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        storage.clear();
     }
 
     @Test

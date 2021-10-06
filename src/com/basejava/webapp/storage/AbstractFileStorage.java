@@ -1,101 +1,110 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
-public abstract class AbstractFileStorage extends AbstractStorage<String> {
+public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
-    private static final Logger LOGGER = Logger.getLogger(AbstractStorage.class.getName());
+    private final File baseDir;
 
-    private final String basePath;
-
-    public AbstractFileStorage(String basePath) {
-        Objects.requireNonNull(basePath, "basePath must not be null");
-        this.basePath = basePath;
-        LOGGER.info("Initializing file storage; basePath=" + basePath);
-
-        File storageDir = new File(basePath);
-        if (!storageDir.exists()) {
-            LOGGER.info("Storage directory not found, creating new");
-            storageDir.mkdir();
-        } else if (storageDir.isDirectory()) {
-            LOGGER.info("Found existing storage directory");
-        } else {
-            throw new RuntimeException("Found file instead of data directory; basePath=" + basePath);
+    protected AbstractFileStorage(File baseDir) {
+        Objects.requireNonNull(baseDir, "baseDir must not be null");
+        if (!baseDir.isDirectory()) {
+            throw new IllegalArgumentException(baseDir.getAbsolutePath() + " is not a directory");
         }
+        if (!(baseDir.canRead() && baseDir.canWrite())) {
+            throw new IllegalArgumentException(baseDir.getAbsolutePath() + " is not readable/writable");
+        }
+        this.baseDir = baseDir;
     }
 
-    private String getFullPathName(String fileName) {
-        return basePath + "/" + fileName;
+    private String[] listFilesChecked() {
+        final String[] files = baseDir.list();
+        if (files == null) {
+            throw new StorageException("Unable to read directory", null);
+        }
+        return files;
     }
 
-    private void deleteFile(String pathName) {
-        LOGGER.info("deleteFile(): pathName=" + pathName);
-        final File f = new File(getFullPathName(pathName));
-        f.delete();
+    private File getFile(String fileName) {
+        return new File(baseDir, fileName);
     }
 
     @Override
     public void clear() {
-        LOGGER.info("clear()");
-        final File storageDir = new File(basePath);
-        for (String pathName : storageDir.list()) {
-            // TODO: decide if directories handling should be supported too
-            deleteFile(pathName);
+        for (String fileName : listFilesChecked()) {
+            deleteImpl(getFile(fileName));
         }
     }
 
-    protected String findKey(String uuid) {
-        return getFullPathName(uuid + ".dat");
+    @Override
+    protected File findKey(String uuid) {
+        return getFile(uuid);
     }
 
     @Override
-    protected boolean exist(String key) {
-        final File f = new File(key);
-        return f.exists();
+    protected boolean exist(File file) {
+        return file.exists();
     }
 
     @Override
-    protected void updateImpl(String key, Resume r) {
-        serializeResume(key, r);
+    protected void updateImpl(File file, Resume r) {
+        try {
+            writeFile(file, r);
+        } catch (IOException e) {
+            throw new StorageException("File write error", r.getUuid(), e);
+        }
     }
 
     @Override
-    protected void saveImpl(String key, Resume r) {
-        serializeResume(key, r);
+    protected void saveImpl(File file, Resume r) {
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            // TODO
+            throw new StorageException("Unable to create file " + file.getAbsolutePath(), r.getUuid(), e);
+        }
+        updateImpl(file, r);
     }
 
     @Override
-    protected Resume getImpl(String key) {
-        return unserializeResume(key);
+    protected Resume getImpl(File file) {
+        try {
+            return readFile(file);
+        } catch (IOException e) {
+            throw new StorageException("File read error", file.getName(), e);
+        }
     }
 
     @Override
-    protected void deleteImpl(String key) {
-        deleteFile(key);
+    protected void deleteImpl(File file) {
+        if (!file.delete()) {
+            throw new StorageException("File delete error", file.getName());
+        }
     }
 
     @Override
     protected List<Resume> getAllImpl() {
-        return null;
+        String[] fileNames = listFilesChecked();
+        List<Resume> resumes = new ArrayList<>(fileNames.length);
+        for (String fileName : fileNames) {
+            resumes.add(getImpl(getFile(fileName)));
+        }
+        return resumes;
     }
 
     @Override
     public int size() {
-        final File storageDir = new File(basePath);
-        int size = 0;
-        for (String ignored : storageDir.list()) {
-            // TODO: decide if directories handling should be supported too
-            size++;
-        }
-        return size;
+        return listFilesChecked().length;
     }
 
-    protected abstract void serializeResume(String pathName, Resume r);
+    protected abstract void writeFile(File file, Resume r) throws IOException;
 
-    protected abstract Resume unserializeResume(String pathName);
+    protected abstract Resume readFile(File filer) throws IOException;
 }

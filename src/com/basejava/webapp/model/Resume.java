@@ -38,19 +38,13 @@ public class Resume implements Comparable<Resume> {
         return contacts.get(type);
     }
 
-    // TODO: refactor?
-    public void setContacts(Map<ContactType, String> contacts) {
-        this.contacts.putAll(contacts);
-    }
+    public void setContact(ContactType type, String contact) { contacts.put(type, contact); }
 
     public Section getSection(SectionType type) {
         return sections.get(type);
     }
 
-    // TODO: refactor?
-    public void setSections(Map<SectionType, Section> sections) {
-        this.sections.putAll(sections);
-    }
+    public void setSection(SectionType type, Section section) { sections.put(type, section); }
 
     @Override
     public boolean equals(Object o) {

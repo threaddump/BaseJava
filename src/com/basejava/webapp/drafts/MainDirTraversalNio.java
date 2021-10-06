@@ -1,9 +1,8 @@
 package com.basejava.webapp.drafts;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -16,6 +15,9 @@ public class MainDirTraversalNio {
 
         System.out.println("traverseUsingRecursion(): ");
         traverseUsingRecursion(root, 0);
+
+        System.out.println("traverseUsingBuiltin(): ");
+        traverseUsingBuiltin(root);
     }
 
     private static void traverseUsingQueue(Path root) throws IOException {
@@ -49,5 +51,23 @@ public class MainDirTraversalNio {
             System.out.print('\t');
         }
         System.out.println(path.getFileName());
+    }
+
+    private static void traverseUsingBuiltin(Path root) {
+        try {
+            Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    System.out.println(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    System.out.println(file);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

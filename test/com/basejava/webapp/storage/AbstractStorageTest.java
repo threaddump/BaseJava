@@ -4,6 +4,7 @@ import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.model.ResumeTestData;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_3);
     }
 
-    // @After
+    @After
     public void tearDown() throws Exception {
         storage.clear();
     }

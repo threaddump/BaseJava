@@ -6,5 +6,4 @@ import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class Section implements Serializable {
-    private static final long serialVersionUID = 1L;
 }

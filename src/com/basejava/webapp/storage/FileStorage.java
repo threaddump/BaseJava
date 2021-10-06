@@ -2,25 +2,31 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.strategy.StreamSerializer;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
 
     private final File baseDir;
+    private final StreamSerializer serializer;
 
-    protected AbstractFileStorage(File baseDir) {
+    protected FileStorage(File baseDir, StreamSerializer serializer) {
         Objects.requireNonNull(baseDir, "baseDir must not be null");
+        Objects.requireNonNull(serializer, "serializer must not be null");
+
         if (!baseDir.isDirectory()) {
             throw new IllegalArgumentException(baseDir.getAbsolutePath() + " is not a directory");
         }
         if (!(baseDir.canRead() && baseDir.canWrite())) {
             throw new IllegalArgumentException(baseDir.getAbsolutePath() + " is not readable/writable");
         }
+
         this.baseDir = baseDir;
+        this.serializer = serializer;
     }
 
     private String[] listFilesChecked() {
@@ -55,7 +61,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateImpl(File file, Resume r) {
         try {
-            writeResume(new BufferedOutputStream(new FileOutputStream(file)), r);
+            serializer.writeResume(new BufferedOutputStream(new FileOutputStream(file)), r);
         } catch (IOException e) {
             throw new StorageException("File write error", r.getUuid(), e);
         }
@@ -74,7 +80,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getImpl(File file) {
         try {
-            return readResume(new BufferedInputStream(new FileInputStream(file)));
+            return serializer.readResume(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
@@ -101,8 +107,4 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     public int size() {
         return listFilesChecked().length;
     }
-
-    protected abstract void writeResume(OutputStream os, Resume r) throws IOException;
-
-    protected abstract Resume readResume(InputStream is) throws IOException;
 }

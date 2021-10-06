@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.storage.strategy.StreamSerializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,16 +12,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
 
     private final Path basePath;
+    private final StreamSerializer serializer;
 
-    protected AbstractPathStorage(String baseDir) {
+    protected PathStorage(String baseDir, StreamSerializer serializer) {
         Objects.requireNonNull(baseDir, "baseDir must not be null");
+        Objects.requireNonNull(serializer, "serializer must not be null");
+
         this.basePath = Paths.get(baseDir).toAbsolutePath().normalize();
         if (!(Files.isDirectory(basePath) && Files.isWritable(basePath))) {
             throw new IllegalArgumentException(baseDir + " is not a directory or is not writable");
         }
+
+        this.serializer = serializer;
     }
 
     @Override
@@ -45,7 +51,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void updateImpl(Path path, Resume r) {
         try {
-            writeResume(new BufferedOutputStream(Files.newOutputStream(path)), r);
+            serializer.writeResume(new BufferedOutputStream(Files.newOutputStream(path)), r);
         } catch (IOException e) {
             throw new StorageException("File write error", r.getUuid(), e);
         }
@@ -64,7 +70,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume getImpl(Path path) {
         try {
-            return readResume(new BufferedInputStream(Files.newInputStream(path)));
+            return serializer.readResume(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("File read error", path.getFileName().toString(), e);
         }
@@ -96,8 +102,4 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
             throw new StorageException("Unable to read directory", null, e);
         }
     }
-
-    protected abstract void writeResume(OutputStream os, Resume r) throws IOException;
-
-    protected abstract Resume readResume(InputStream is) throws IOException;
 }

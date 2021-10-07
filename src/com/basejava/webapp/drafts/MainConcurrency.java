@@ -89,6 +89,8 @@ public class MainConcurrency {
             t.start();
             threads.add(t);
         }
+
+        // CountDownLatch is another possible solution instead of join()
         threads.forEach(t -> {
             try {
                 t.join(); // if we join thread that has already finished - we just proceed to the next thread

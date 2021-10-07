@@ -35,11 +35,11 @@ public class DataStreamSerializer implements StreamSerializer {
                                 deepWrite(dos, ((OrgSection) e.getValue()).getOrgs(), o -> {
                                     Link l = o.getLink();
                                     dos.writeUTF(l.getTitle());
-                                    safeWriteUTF(dos, l.getUrl());
+                                    dos.writeUTF(l.getUrl());
                                     deepWrite(dos, o.getPositions(), p -> {
                                         writeTimeSpan(dos, p.getTimeSpan());
                                         dos.writeUTF(p.getTitle());
-                                        safeWriteUTF(dos, p.getDescription());
+                                        dos.writeUTF(p.getDescription());
                                     });
                                 });
                                 break;
@@ -69,8 +69,8 @@ public class DataStreamSerializer implements StreamSerializer {
                         break;
                     case EXPERIENCE: case EDUCATION:
                         section = new OrgSection(deepRead(dis, () -> new Organization(
-                                new Link(dis.readUTF(), safeReadUTF(dis)),
-                                deepRead(dis, () -> new Position(readTimeSpan(dis), dis.readUTF(), safeReadUTF(dis)))
+                                new Link(dis.readUTF(), dis.readUTF()),
+                                deepRead(dis, () -> new Position(readTimeSpan(dis), dis.readUTF(), dis.readUTF()))
                                 )));
                         break;
                 }
@@ -116,16 +116,6 @@ public class DataStreamSerializer implements StreamSerializer {
         public A getFirst() { return first; }
 
         public B getSecond() { return second; }
-    }
-
-    private void safeWriteUTF(DataOutputStream dos, String s) throws IOException {
-        boolean present = (s != null);
-        dos.writeBoolean(present);
-        if (present) { dos.writeUTF(s); }
-    }
-
-    private String safeReadUTF(DataInputStream dis) throws IOException {
-        return dis.readBoolean() ? dis.readUTF() : null;
     }
 
     private void writeTimeSpan(DataOutputStream dos, TimeSpan timeSpan) throws IOException {

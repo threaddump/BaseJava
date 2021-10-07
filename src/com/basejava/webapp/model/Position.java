@@ -22,7 +22,7 @@ public class Position implements Serializable {
         // nulls in description are allowed intentionally
         this.timeSpan = timeSpan;
         this.title = title;
-        this.description = description;
+        this.description = description != null ? description : "";
     }
 
     public TimeSpan getTimeSpan() {

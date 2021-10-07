@@ -5,7 +5,6 @@ import com.basejava.webapp.storage.*;
 import com.basejava.webapp.storage.strategy.*;
 
 import java.io.File;
-import java.util.Properties;
 
 public class StorageFactory {
 
@@ -13,18 +12,14 @@ public class StorageFactory {
     }
 
     public static Storage getStorage() {
-        return getStorage(Config.get().getProps());
+        return getStorage(Config.get().getStorageConfig());
     }
 
-    public static Storage getStorage(Properties props) {
-        return getStorage(props.getProperty("storage.type"), props);
+    public static Storage getStorage(StorageConfig cfg) {
+        return getStorage(cfg.getStorageType(), cfg);
     }
 
-    public static Storage getStorage(String storageType, Properties props) {
-        return getStorage(StorageType.valueOf(storageType), props);
-    }
-
-    public static Storage getStorage(StorageType storageType, Properties props) {
+    public static Storage getStorage(StorageType storageType, StorageConfig cfg) {
         switch (storageType) {
             case ARRAY:
                 return new ArrayStorage();
@@ -38,27 +33,27 @@ public class StorageFactory {
                 return new MapResumeStorage();
             case FILE:
                 return new FileStorage(
-                        new File((String) props.get("storage.dir")),
-                        getStreamSerializer((String) props.get("serializer.type"))
+                        new File(cfg.getStorageDir()),
+                        getStreamSerializer(cfg)
                 );
             case PATH:
                 return new PathStorage(
-                        (String) props.get("storage.dir"),
-                        getStreamSerializer((String) props.get("serializer.type"))
+                        cfg.getStorageDir(),
+                        getStreamSerializer(cfg)
                 );
             case SQL:
                 return new SqlStorage(
-                        (String) props.get("db.url"),
-                        (String) props.get("db.user"),
-                        (String) props.get("db.password")
+                        cfg.getDbUrl(),
+                        cfg.getDbUsername(),
+                        cfg.getDbPassword()
                 );
             default:
                 throw new IllegalStateException("Unknown storageType = " + storageType);
         }
     }
 
-    private static StreamSerializer getStreamSerializer(String serializerType) {
-        return getStreamSerializer(StreamSerializerType.valueOf(serializerType));
+    private static StreamSerializer getStreamSerializer(StorageConfig cfg) {
+        return getStreamSerializer(cfg.getStreamSerializerType());
     }
 
     private static StreamSerializer getStreamSerializer(StreamSerializerType serializerType) {

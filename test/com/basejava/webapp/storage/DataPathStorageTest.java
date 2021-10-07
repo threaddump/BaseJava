@@ -1,21 +1,20 @@
 package com.basejava.webapp.storage;
 
 import com.basejava.webapp.Config;
+import com.basejava.webapp.storage.factory.StorageConfig;
 import com.basejava.webapp.storage.factory.StorageFactory;
-import com.basejava.webapp.storage.factory.StorageType;
-import com.basejava.webapp.storage.factory.StreamSerializerType;
-
-import java.util.Properties;
 
 public class DataPathStorageTest extends AbstractStorageTest {
-    private static final Properties props = new Properties();
-    static {
-        props.setProperty("storage.type", StorageType.PATH.name());
-        props.setProperty("storage.dir", Config.get().getProps().getProperty("storage.dir"));
-        props.setProperty("serializer.type", StreamSerializerType.DATA_STREAM.name());
-    }
+    private static final StorageConfig cfg = new StorageConfig(
+            "PATH",
+            Config.get().getStorageConfig().getStorageDir(),
+            "DATA_STREAM",
+            null,
+            null,
+            null
+    );
 
     public DataPathStorageTest() {
-        super(StorageFactory.getStorage(props));
+        super(StorageFactory.getStorage(cfg));
     }
 }

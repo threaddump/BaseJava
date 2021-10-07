@@ -1,5 +1,7 @@
 package com.basejava.webapp;
 
+import com.basejava.webapp.storage.factory.StorageConfig;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,5 +25,14 @@ public class Config {
 
     public static Config get() { return INSTANCE; }
 
-    public Properties getProps() { return props; }
+    public StorageConfig getStorageConfig() {
+        return new StorageConfig(
+                props.getProperty("storage.type"),
+                props.getProperty("storage.dir"),
+                props.getProperty("serializer.type"),
+                props.getProperty("db.url"),
+                props.getProperty("db.user"),
+                props.getProperty("db.password")
+                );
+    }
 }

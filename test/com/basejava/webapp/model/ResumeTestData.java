@@ -5,10 +5,21 @@ import com.basejava.webapp.util.DateUtil;
 import java.time.Month;
 
 public class ResumeTestData {
+    private static boolean SET_CONTACTS = true;
+    private static boolean SET_SECTIONS = true;
 
     public static Resume makeResume(String uuid, String fullName) {
         final Resume resume = new Resume(uuid, fullName);
+        if (SET_CONTACTS) {
+            setContacts(resume);
+        }
+        if (SET_SECTIONS) {
+            setSections(resume);
+        }
+        return resume;
+    }
 
+    private static void setContacts(Resume resume) {
         resume.setContact(ContactType.PHONE, "8(800)555-35-35");
         resume.setContact(ContactType.SKYPE, "abcabcabc");
         resume.setContact(ContactType.EMAIL, "noreply@nomail.no");
@@ -16,7 +27,9 @@ public class ResumeTestData {
         resume.setContact(ContactType.GITHUB, "https://github.com/");
         resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/");
         resume.setContact(ContactType.HOMEPAGE, "http://example.com/");
+    }
 
+    private static void setSections(Resume resume) {
         resume.setSection(SectionType.OBJECTIVE, new TextSection("objective section content"));
         resume.setSection(SectionType.PERSONAL, new TextSection("personal section content"));
         resume.setSection(
@@ -102,8 +115,5 @@ public class ResumeTestData {
                         )
                 )
         );
-
-        return resume;
     }
-
 }

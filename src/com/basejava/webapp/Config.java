@@ -25,7 +25,11 @@ public class Config {
 
     public static Config get() { return INSTANCE; }
 
-    public File getStorageDir() {
-        return storageDir;
-    }
+    public File getStorageDir() { return storageDir; }
+
+    public String getDbUrl() { return props.getProperty("db.url"); }
+
+    public String getDbUser() { return props.getProperty("db.user"); }
+
+    public String getDbPassword() { return props.getProperty("db.password"); }
 }

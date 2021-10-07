@@ -16,6 +16,12 @@ import java.util.List;
 public class MainArray {
     private final static Storage ARRAY_STORAGE = new ArrayStorage();
 
+//    private final static Storage ARRAY_STORAGE;
+//    static {
+//        final Config cfg = Config.get();
+//        ARRAY_STORAGE = new SqlStorage(cfg.getDbUrl(), cfg.getDbUser(), cfg.getDbPassword());
+//    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;

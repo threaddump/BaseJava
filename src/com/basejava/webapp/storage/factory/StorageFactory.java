@@ -12,14 +12,15 @@ public class StorageFactory {
     }
 
     public static Storage getStorage() {
-        return getStorage(Config.get().getStorageConfig());
+        final StorageConfig cfg = Config.get().getStorageConfig();
+        return getStorage(cfg);
     }
 
     public static Storage getStorage(StorageConfig cfg) {
         return getStorage(cfg.getStorageType(), cfg);
     }
 
-    public static Storage getStorage(StorageType storageType, StorageConfig cfg) {
+    private static Storage getStorage(StorageType storageType, StorageConfig cfg) {
         switch (storageType) {
             case ARRAY:
                 return new ArrayStorage();

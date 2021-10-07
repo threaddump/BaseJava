@@ -47,7 +47,7 @@ public class ResumeTestData {
                                 new Position(new TimeSpan(DateUtil.of(2014, Month.OCTOBER), DateUtil.of(2016, Month.JANUARY)), "Role 2", "Description 2")
                         ),
                         new Organization(
-                                new Link("Title 3", "http://link3.example.com/"),
+                                new Link("Title 3", null),
                                 new Position(new TimeSpan(DateUtil.of(2012, Month.APRIL), DateUtil.of(2014, Month.OCTOBER)), "Role 3", "Description 3")
                         ),
                         new Organization(

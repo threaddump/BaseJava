@@ -1,9 +1,21 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.storage.strategy.JsonStreamSerializer;
+import com.basejava.webapp.Config;
+import com.basejava.webapp.storage.factory.StorageFactory;
+import com.basejava.webapp.storage.factory.StorageType;
+import com.basejava.webapp.storage.factory.StreamSerializerType;
+
+import java.util.Properties;
 
 public class JsonPathStorageTest extends AbstractStorageTest {
+    private static final Properties props = new Properties();
+    static {
+        props.setProperty("storage.type", StorageType.PATH.name());
+        props.setProperty("storage.dir", Config.get().getProps().getProperty("storage.dir"));
+        props.setProperty("serializer.type", StreamSerializerType.JSON.name());
+    }
+
     public JsonPathStorageTest() {
-        super(new PathStorage(STORAGE_DIR.getAbsolutePath(), new JsonStreamSerializer()));
+        super(StorageFactory.getStorage(props));
     }
 }

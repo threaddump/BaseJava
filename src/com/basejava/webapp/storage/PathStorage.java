@@ -20,7 +20,7 @@ public class PathStorage extends AbstractStorage<Path> {
     private final Path basePath;
     private final StreamSerializer serializer;
 
-    protected PathStorage(String baseDir, StreamSerializer serializer) {
+    public PathStorage(String baseDir, StreamSerializer serializer) {
         Objects.requireNonNull(baseDir, "baseDir must not be null");
         Objects.requireNonNull(serializer, "serializer must not be null");
 

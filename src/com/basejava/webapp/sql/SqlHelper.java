@@ -19,23 +19,19 @@ public class SqlHelper {
         this.connFactory = connFactory;
     }
 
-    public interface Payload<T> {
-        T execute(PreparedStatement ps) throws SQLException;
-    }
-
-    public <T> T execute(String sqlStatement, Payload<T> payload) {
+    public <T> T execute(String sql, SqlExecutor<T> executor) {
         try (
                 Connection conn = connFactory.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sqlStatement)
+                PreparedStatement ps = conn.prepareStatement(sql)
                 ) {
-            return payload.execute(ps);
+            return executor.execute(ps);
         } catch (SQLException e) {
             throw processSqlException(e);
         }
     }
 
-    public void execute(String sqlStatement) {
-        execute(sqlStatement, PreparedStatement::execute);
+    public void execute(String sql) {
+        execute(sql, PreparedStatement::execute);
     }
 
     private RuntimeException processSqlException(SQLException e) {

@@ -43,6 +43,8 @@ public class DataStreamSerializer implements StreamSerializer {
                                     });
                                 });
                                 break;
+                            default:
+                                throw new UnsupportedOperationException("Unsupported SectionType: " + sectionType);
                         }
                     }
             );
@@ -73,6 +75,8 @@ public class DataStreamSerializer implements StreamSerializer {
                                 deepRead(dis, () -> new Position(readTimeSpan(dis), dis.readUTF(), dis.readUTF()))
                                 )));
                         break;
+                    default:
+                        throw new UnsupportedOperationException("Unsupported SectionType: " + sectionType);
                 }
                 return Tuple.of(sectionType, section);
             }).forEach(t -> resume.setSection(t.getFirst(), t.getSecond()));

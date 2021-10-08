@@ -5,8 +5,10 @@ import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.sql.SqlHelper;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -43,22 +45,8 @@ public class SqlStorage implements Storage {
                 return null;
             });
 
-            sqlHelper.execUnchecked(conn, "DELETE FROM contact WHERE resume_uuid = ?", ps -> {
-                ps.setString(1, uuid);
-                ps.execute();
-                return null;
-            });
-
-            sqlHelper.execUnchecked(conn, "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)", ps -> {
-                for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
-                    ps.setString(1, uuid);
-                    ps.setString(2, e.getKey().name());
-                    ps.setString(3, e.getValue());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-                return null;
-            });
+            deleteContacts(conn, uuid);
+            saveContacts(conn, r);
 
             return null;
         });
@@ -76,16 +64,7 @@ public class SqlStorage implements Storage {
                 return null;
             });
 
-            sqlHelper.execUnchecked(conn, "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)", ps -> {
-                for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
-                    ps.setString(1, uuid);
-                    ps.setString(2, e.getKey().name());
-                    ps.setString(3, e.getValue());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-                return null;
-            });
+            saveContacts(conn, r);
 
             return null;
         });
@@ -108,7 +87,7 @@ public class SqlStorage implements Storage {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    r.setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                    readContact(rs, r);
                 }
                 return null;
             });
@@ -147,7 +126,7 @@ public class SqlStorage implements Storage {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     Resume r = resumeMap.get(rs.getString("resume_uuid"));
-                    r.setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                    readContact(rs, r);
                 }
                 return null;
             });
@@ -165,5 +144,31 @@ public class SqlStorage implements Storage {
             ResultSet rs = ps.executeQuery();
             return rs.next() ? rs.getInt(1) : 0;
         });
+    }
+
+    private void saveContacts(Connection conn, Resume r) throws SQLException {
+        final String uuid = r.getUuid();
+        sqlHelper.execUnchecked(conn, "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)", ps -> {
+            for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
+                ps.setString(1, uuid);
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            return null;
+        });
+    }
+
+    private void deleteContacts(Connection conn, String uuid) throws SQLException {
+        sqlHelper.execUnchecked(conn, "DELETE FROM contact WHERE resume_uuid = ?", ps -> {
+            ps.setString(1, uuid);
+            ps.execute();
+            return null;
+        });
+    }
+
+    private void readContact(ResultSet rs, Resume r) throws SQLException {
+        r.setContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
     }
 }

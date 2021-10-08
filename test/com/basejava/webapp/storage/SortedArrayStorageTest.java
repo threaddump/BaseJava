@@ -36,7 +36,7 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest {
     @Test()
     public void testDeleteFirst() {
         // delete first resume in SortedArrayStorage
-        // (System.arraycopy is not invoked in this case)
+        // (System.arraycopy is invoked in this case)
 
         List<Resume> resumes = new ArrayList<>(storage.getAllSorted());
         resumes.sort(Comparator.comparing(Resume::getUuid));

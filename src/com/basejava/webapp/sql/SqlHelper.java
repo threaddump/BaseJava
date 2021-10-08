@@ -19,22 +19,49 @@ public class SqlHelper {
         this.connFactory = connFactory;
     }
 
-    public <T> T execute(String sql, SqlExecutor<T> executor) {
+    public void execChecked(String sql) {
+        execChecked(sql, PreparedStatement::execute);
+    }
+
+    public <T> T execChecked(String sql, SqlExecutor<T> executor) {
         try (
                 Connection conn = connFactory.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ) {
             return executor.execute(ps);
         } catch (SQLException e) {
-            throw processSqlException(e);
+            throw convertSqlException(e);
         }
     }
 
-    public void execute(String sql) {
-        execute(sql, PreparedStatement::execute);
+    public void execUnchecked(Connection conn, String sql) throws SQLException {
+        execUnchecked(conn, sql, PreparedStatement::execute);
     }
 
-    private RuntimeException processSqlException(SQLException e) {
+    public <T> T execUnchecked(Connection conn, String sql, SqlExecutor<T> executor) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            return executor.execute(ps);
+        }
+    }
+
+    // transactional wrapper for use with execUnchecked(...)
+    public <T> T execTransaction(SqlTransaction<T> transaction) {
+        try (Connection conn = connFactory.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T result = transaction.execute(conn);
+                conn.commit();
+                return result;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw convertSqlException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
+    }
+
+    private RuntimeException convertSqlException(SQLException e) {
         if (e instanceof PSQLException) {
             final String sqlState = e.getSQLState();
             if (sqlState.equals(PSQL_UNIQUE_VIOLATION)) {

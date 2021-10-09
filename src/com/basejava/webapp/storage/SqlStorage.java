@@ -29,7 +29,7 @@ public class SqlStorage implements Storage {
             LOGGER.info("Loading JDBC driver explicitly");
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Unable to load JDBC driver");
+            throw new IllegalStateException("Unable to load JDBC driver", e);
         }
 
         sqlHelper = new SqlHelper(() -> {

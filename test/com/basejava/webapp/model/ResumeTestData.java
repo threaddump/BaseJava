@@ -1,8 +1,12 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.storage.Storage;
+import com.basejava.webapp.storage.factory.StorageFactory;
 import com.basejava.webapp.util.DateUtil;
 
 import java.time.Month;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class ResumeTestData {
     private static boolean SET_CONTACTS = true;
@@ -127,5 +131,22 @@ public class ResumeTestData {
                     )
             );
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Добавление тестовых резюме в базу");
+
+        Storage storage = StorageFactory.getStorage();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Сколько добавляем? ");
+        int count = scanner.nextInt();
+        scanner.nextLine();
+        for (int i = 0; i < count; i++) {
+            storage.save(makeResume(UUID.randomUUID().toString(), "John Doe"));
+        }
+
+        System.out.println("Готово");
+        scanner.nextLine();
     }
 }

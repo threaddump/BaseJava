@@ -22,6 +22,13 @@ public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            LOGGER.info("Loading JDBC driver explicitly");
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Unable to load JDBC driver");
+        }
+
         sqlHelper = new SqlHelper(() -> {
             // very expensive operation; TODO: add caching?
             return DriverManager.getConnection(dbUrl, dbUser, dbPassword);

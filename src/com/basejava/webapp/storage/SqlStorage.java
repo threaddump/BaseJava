@@ -1,9 +1,12 @@
 package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
-import com.basejava.webapp.model.*;
+import com.basejava.webapp.model.ContactType;
+import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.Section;
+import com.basejava.webapp.model.SectionType;
 import com.basejava.webapp.sql.SqlHelper;
+import com.basejava.webapp.util.JsonParser;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -216,27 +219,9 @@ public class SqlStorage implements Storage {
         final String uuid = r.getUuid();
         sqlHelper.execUnchecked(conn, "INSERT INTO section (resume_uuid, type, value) VALUES (?, ?, ?)", ps -> {
             for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
-                SectionType sectionType = e.getKey();
-                Section section = e.getValue();
-
-                String sectionContent = null;
-                switch (sectionType) {
-                    case OBJECTIVE: case PERSONAL:
-                        sectionContent = ((TextSection) section).getContent();
-                        break;
-                    case ACHIEVEMENT: case QUALIFICATIONS:
-                        sectionContent = String.join("\n", ((ListSection) section).getItems());
-                        break;
-                    case EXPERIENCE: case EDUCATION:
-                        sectionContent = encodeOrgSection((OrgSection) section);
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("Unsupported SectionType: " + sectionType);
-                }
-
                 ps.setString(1, uuid);
                 ps.setString(2, e.getKey().name());
-                ps.setString(3, sectionContent);
+                ps.setString(3, JsonParser.toJson(e.getValue(), Section.class));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -246,30 +231,7 @@ public class SqlStorage implements Storage {
 
     private void readSection(ResultSet rs, Resume r) throws SQLException {
         SectionType sectionType = SectionType.valueOf(rs.getString("type"));
-        String sectionContent = rs.getString("value");
-
-        Section section = null;
-        switch (sectionType) {
-            case OBJECTIVE: case PERSONAL:
-                section = new TextSection(sectionContent);
-                break;
-            case ACHIEVEMENT: case QUALIFICATIONS:
-                section = new ListSection(sectionContent.split("\n"));
-                break;
-            case EXPERIENCE: case EDUCATION:
-                section = decodeOrgSection(sectionContent);
-                break;
-            default:
-                throw new UnsupportedOperationException("Unsupported SectionType: " + sectionType);
-        }
+        Section section = JsonParser.fromJson(rs.getString("value"), Section.class);
         r.setSection(sectionType, section);
-    }
-
-    private String encodeOrgSection(OrgSection section) {
-        throw new StorageException("Not implemented yet");
-    }
-
-    private OrgSection decodeOrgSection(String sectionContent) {
-        throw new StorageException("Not implemented yet");
     }
 }

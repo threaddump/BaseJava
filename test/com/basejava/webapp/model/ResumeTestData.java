@@ -14,7 +14,7 @@ public class ResumeTestData {
 
     private static boolean SET_TEXT_SECTIONS = true;
     private static boolean SET_LIST_SECTIONS = true;
-    private static boolean SET_ORG_SECTIONS = false;
+    private static boolean SET_ORG_SECTIONS = true;
 
     public static Resume makeResume(String uuid, String fullName) {
         final Resume resume = new Resume(uuid, fullName);

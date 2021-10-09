@@ -71,6 +71,11 @@ HR {
     color: #c4c4c4;
 }
 
+UL {
+    margin-top: 0;
+    margin-block-end: 1em;
+}
+
 P {
     text-align: justify;
 }

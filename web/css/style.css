@@ -15,7 +15,7 @@ H1 {
 H2 {
     margin-top: 0;
     margin-bottom: 0;
-    letter-spacing: 3pt;
+    letter-spacing: 5pt;
     font-size: 22pt;
 }
 
@@ -211,16 +211,17 @@ DD {
     border-style: none;
     border-collapse: separate;
     border-spacing: 5px;
+    margin-bottom: 1em;
 }
 
-.th_td_list_positions_1 {
+.td_list_positions_1 {
     background-color: #f2f2f2;
     width: 25%;
     padding: 5px;
     white-space: nowrap;
 }
 
-.th_td_list_positions_2 {
+.td_list_positions_2 {
     background-color: #f2f2f2;
     width: 75%;
     padding: 5px;

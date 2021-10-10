@@ -1,4 +1,4 @@
-package com.basejava.webapp.util;
+package com.basejava.webapp.drafts;
 
 public class LazySingleton {
 

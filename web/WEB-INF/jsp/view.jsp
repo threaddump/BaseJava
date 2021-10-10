@@ -3,6 +3,7 @@
 <%@ page import="com.basejava.webapp.model.SectionType" %>
 <%@ page import="com.basejava.webapp.web.ContactRenderer" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
+<%@ page import="com.basejava.webapp.web.SectionRenderer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -43,9 +44,10 @@
 
             <c:forEach var="sectionEntry" items="${resume.sections}">
                 <jsp:useBean id="sectionEntry" type="java.util.Map.Entry<com.basejava.webapp.model.SectionType, com.basejava.webapp.model.Section>"/>
-                <h2><%=sectionEntry.getKey().getTitle()%></h2><br/>
-                <!-- TODO -->
+                <%=SectionRenderer.toHtml(sectionEntry.getKey(), sectionEntry.getValue())%>
             </c:forEach>
+
+            <br>
 
         </td>
     </tr>

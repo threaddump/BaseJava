@@ -26,23 +26,23 @@
         <!-- content -->
         <td class="td_main_section_content">
 
-            <table class="table_output">
-                <thead class="thead_output">
+            <table class="table_list_resume">
+                <thead class="thead_list_resume">
                 <tr>
-                    <th class="th_td_output" style="width: 50px;">Действия</th>
-                    <th class="th_td_output">Имя</th>
-                    <th class="th_td_output">E-mail</th>
+                    <th class="th_td_list_resume" style="width: 50px;">Действия</th>
+                    <th class="th_td_list_resume">Имя</th>
+                    <th class="th_td_list_resume">E-mail</th>
                 </tr>
                 </thead>
-                <tbody class="tbody_output">
+                <tbody class="tbody_list_resume">
                 <c:forEach items="${resumes}" var="resume">
                     <jsp:useBean id="resume" type="com.basejava.webapp.model.Resume"/>
                     <tr>
-                        <td class="th_td_output" style="width: 50px;">
+                        <td class="th_td_list_resume" style="width: 50px;">
                             <%=HtmlSnippets.getAckDeleteButton(resume.getUuid())%>&nbsp;<%=HtmlSnippets.getEditButton(resume.getUuid())%>
                         </td>
-                        <td class="th_td_output"><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
-                        <td class="th_td_output"><%=ContactRenderer.getEmailHref(resume.getContact(ContactType.EMAIL))%></td>
+                        <td class="th_td_list_resume"><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
+                        <td class="th_td_list_resume"><%=ContactRenderer.getEmailHref(resume.getContact(ContactType.EMAIL))%></td>
                     </tr>
                 </c:forEach>
                 </tbody>

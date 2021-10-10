@@ -86,11 +86,9 @@
                 </dl>
                 <!-- params with the same name can be retrieved using request.getParameterValues(name) -->
 
-
                 <hr>
                 <button type="submit">Сохранить</button>
                 <button type="reset">Сбросить</button>
-                <button onclick="window.history.back()">Назад</button>
             </form>
 
         </td>

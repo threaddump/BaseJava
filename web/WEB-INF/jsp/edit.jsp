@@ -1,6 +1,9 @@
 <%@ page import="com.basejava.webapp.model.Resume" %>
 <%@ page import="com.basejava.webapp.model.ContactType" %>
 <%@ page import="com.basejava.webapp.model.SectionType" %>
+<%@ page import="com.basejava.webapp.model.Section" %>
+<%@ page import="com.basejava.webapp.model.TextSection" %>
+<%@ page import="com.basejava.webapp.model.ListSection" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -61,7 +64,8 @@
                         <div class="form_div">
                             <label for="${contactType.name()}" class="form_label">${contactType.title}:</label>
                             <span class="form_span">
-                                <input type="text" name="${contactType.name()}" id="${contactType.name()}" value="${resume.getContact(contactType)}" />
+                                <input type="text" name="${contactType.name()}"
+                                       id="${contactType.name()}" value="${resume.getContact(contactType)}" />
                             </span>
                         </div>
                     </c:forEach>
@@ -74,18 +78,17 @@
                 <p>
                     <c:forEach var="sectionType" items="<%=SectionType.values()%>">
                         <jsp:useBean id="sectionType" type="com.basejava.webapp.model.SectionType" />
+                        <c:set var="section" value="<%=resume.getSection(sectionType)%>" />
+                        <jsp:useBean id="section" type="com.basejava.webapp.model.Section" />
+
                         <c:choose>
 
                             <c:when test="${(sectionType == SectionType.OBJECTIVE) || (sectionType == SectionType.PERSONAL)}">
                                 <div class="form_div">
                                     <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
-                            <!-- TODO: not really clear how to initialize value, especially if section can be missing.
-                                ensure that sections are non-null? will require changes in viewing...
-                                maybe add isEmpty() method to Section interface? -->
-
-                                        <textarea name="${sectionType.name()}" id="${sectionType.name()}"
-                                                  oninput="strip_newline(this); auto_height(this);">TODO</textarea>
+                                        <textarea name="${sectionType.name()}" oninput="strip_newline(this); auto_height(this);"
+                                                  id="${sectionType.name()}"><%=((TextSection) section).getContent()%></textarea>
                                     </span>
                                 </div>
                             </c:when>
@@ -95,13 +98,13 @@
                                     <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
                                         <textarea name="${sectionType.name()}" id="${sectionType.name()}"
-                                                  oninput="auto_height(this);">TODO</textarea>
+                                                  oninput="auto_height(this);"><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
                                     </span>
                                 </div>
                             </c:when>
 
                             <c:when test="${(sectionType == SectionType.EXPERIENCE) || (sectionType == SectionType.EDUCATION)}">
-                                <p>${sectionType.title} is not supported yet</p>
+                                <p>Section <b>${sectionType.title}</b> is not supported yet</p>
                             </c:when>
 
                         </c:choose>

@@ -61,4 +61,8 @@ public class HtmlSnippets {
                         "&#" + c + ";" : new String(Character.toChars(c)))
                 .collect(Collectors.joining());
     }
+
+    public static boolean isNullOrEmpty(String str) {
+        return (str == null) || (str.trim().length() == 0);
+    }
 }

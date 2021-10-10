@@ -11,6 +11,7 @@ public class MainString {
         System.out.println(result);
         */
 
+        /*
         // more efficient approach
         StringBuilder sb = new StringBuilder();
         for (String str : strArray) {
@@ -30,5 +31,12 @@ public class MainString {
         System.out.println(s1 == s3); // true
         System.out.println(s1 == s5); // false
         System.out.println(s1 == s6); // true
+        */
+
+        String s = "a\n\n\nb";
+        String[] arr = s.split("\n");
+        System.out.println(arr.length);
+        String s2 = String.join("\n", arr);
+        System.out.println(s2);
     }
 }

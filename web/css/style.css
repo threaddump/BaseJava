@@ -77,6 +77,11 @@ UL {
     margin-block-end: 1em;
 }
 
+LI {
+    text-align: justify;
+    margin: 5px;
+}
+
 P {
     text-align: justify;
 }

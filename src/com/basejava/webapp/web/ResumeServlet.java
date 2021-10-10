@@ -1,7 +1,6 @@
 package com.basejava.webapp.web;
 
-import com.basejava.webapp.model.ContactType;
-import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.storage.factory.StorageFactory;
 
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +70,7 @@ public class ResumeServlet extends HttpServlet {
     private void handleEdit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
         Resume r = storage.get(uuid);
+        populateEmptySections(r);
         request.setAttribute("resume", r);
         request.setAttribute("storageAction", "update");
         request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
@@ -78,6 +79,7 @@ public class ResumeServlet extends HttpServlet {
     private void handleCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = UUID.randomUUID().toString();
         Resume r = new Resume("Имя Фамилия");
+        populateEmptySections(r);
         request.setAttribute("resume", r);
         request.setAttribute("storageAction", "save");
         request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
@@ -101,10 +103,15 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-        action = (action == null) ? "" : action;
+        if (action == null) {
+            throw new IllegalArgumentException("Action must not be null");
+        } else if (!(action.equals("update") || action.equals("save"))) {
+            throw new IllegalArgumentException("Action " + action + " must not be null");
+        }
 
         String uuid = request.getParameter("uuid");
-        String fullName = HtmlSnippets.escapeHTML(request.getParameter("fullName"));
+        String fullName = request.getParameter("fullName");
+        fullName = HtmlSnippets.escapeHTML(fullName);
 
         Resume r = null;
         switch (action) {
@@ -121,14 +128,51 @@ public class ResumeServlet extends HttpServlet {
 
         for (ContactType contactType : ContactType.values()) {
             String contactValue = request.getParameter(contactType.name());
-            if (contactValue != null && contactValue.trim().length() != 0) {
+            if (!HtmlSnippets.isNullOrEmpty(contactValue)) {
+                contactValue = HtmlSnippets.escapeHTML(contactValue);
                 r.setContact(contactType, contactValue);
             } else {
                 r.getContacts().remove(contactType);
             }
         }
 
-        // TODO: parse resume from params
+        for (SectionType sectionType : SectionType.values()) {
+            switch (sectionType) {
+                case OBJECTIVE: case PERSONAL:
+                    String textSectionValue = request.getParameter(sectionType.name());
+                    if (!HtmlSnippets.isNullOrEmpty(textSectionValue)) {
+                        textSectionValue = HtmlSnippets.escapeHTML(textSectionValue);
+                        r.setSection(sectionType, new TextSection(textSectionValue));
+                    } else {
+                        r.getSections().remove(sectionType);
+                    }
+                    break;
+                case ACHIEVEMENT: case QUALIFICATIONS:
+                    String listSectionValueRaw = request.getParameter(sectionType.name());
+                    // Different combinations of CR / CR+LF / LF are possible in input, all of them are line breaks.
+                    // java.util.regex.Pattern supports "Linebreak matcher" - "\R", which is exactly what we need.
+                    // https://stackoverflow.com/questions/454908/split-java-string-by-new-line/31060125#31060125
+                    String[] listSectionValue = listSectionValueRaw.split("\\R");
+                    // drop empty values
+                    listSectionValue = Arrays.stream(listSectionValue)
+                                            .filter(s -> !HtmlSnippets.isNullOrEmpty(s))
+                                            .toArray(String[]::new);
+                    if (listSectionValue.length > 0) {
+                        listSectionValue = Arrays.stream(listSectionValue)
+                                                .map(HtmlSnippets::escapeHTML)
+                                                .toArray(String[]::new);
+                        r.setSection(sectionType, new ListSection(listSectionValue));
+                    } else {
+                        r.getSections().remove(sectionType);
+                    }
+                    break;
+                case EXPERIENCE: case EDUCATION:
+                    // TODO
+                    break;
+            }
+        }
+
+        // TODO: parse resume from params; don't forget to escape user input
 
         switch (action) {
             case "update":
@@ -137,11 +181,33 @@ public class ResumeServlet extends HttpServlet {
             case "save":
                 storage.save(r);
                 break;
-            default:
-                throw new IllegalArgumentException("Action " + action + " (post) is illegal");
         }
 
         request.setAttribute("resume", r);
         request.getRequestDispatcher("/WEB-INF/jsp/view.jsp").forward(request, response);
+    }
+
+    private void populateEmptySections(Resume r) {
+        // replace null sections with empty objects
+        // nulls lead to "java.lang.InstantiationException: bean section not found within scope" in edit.jsp (WTF?!)
+        for (SectionType sectionType : SectionType.values()) {
+            Section section = r.getSection(sectionType);
+            if (section == null) {
+                switch (sectionType) {
+                    case OBJECTIVE: case PERSONAL:
+                        section = TextSection.EMPTY;
+                        break;
+                    case ACHIEVEMENT: case QUALIFICATIONS:
+                        section = ListSection.EMPTY;
+                        break;
+                    case EXPERIENCE: case EDUCATION:
+                        // TODO:
+                        section = TextSection.EMPTY;
+                        //section = OrgSection.EMPTY;
+                        break;
+                }
+            }
+            r.setSection(sectionType, section);
+        }
     }
 }

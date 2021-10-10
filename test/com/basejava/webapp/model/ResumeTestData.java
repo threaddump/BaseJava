@@ -34,7 +34,7 @@ public class ResumeTestData {
         resume.setContact(ContactType.LINKEDIN, "https://linkedin.com/");
         resume.setContact(ContactType.GITHUB, "https://github.com/");
         resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/");
-        resume.setContact(ContactType.HOMEPAGE, "http://example.com/");
+        resume.setContact(ContactType.HOME_PAGE, "http://example.com/");
     }
 
     private static void setSections(Resume resume) {

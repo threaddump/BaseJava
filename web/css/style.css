@@ -2,6 +2,7 @@ BODY {
     background-color: #e8e8e8;
     color: #2f3628;
     margin: 4px;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 H1 {
@@ -14,28 +15,28 @@ H1 {
 H2 {
     margin-top: 0;
     margin-bottom: 0;
-    letter-spacing: 5pt;
+    letter-spacing: 3pt;
     font-size: 22pt;
 }
 
 H3 {
     margin-top: 0;
     margin-bottom: 0;
-    letter-spacing: 4pt;
+    letter-spacing: 2pt;
     font-size: 20pt;
 }
 
 H4 {
     margin-top: 0;
     margin-bottom: 0;
-    letter-spacing: 3pt;
+    letter-spacing: 1pt;
     font-size: 18pt;
 }
 
 H5 {
     margin-top: 0;
     margin-bottom: 0;
-    letter-spacing: 2pt;
+    letter-spacing: 1pt;
     font-size: 16pt;
 }
 
@@ -52,12 +53,12 @@ A:hover {
 }
 
 A:active {
-    color: #ff0000;
+    color: #466016;
     text-decoration: underline;
 }
 
 A:visited {
-    color: #b2a76b;
+    color: #466016;
     text-decoration: underline;
 }
 
@@ -84,6 +85,22 @@ PRE {
     display: block;
     padding-left: 1em;
     background-color: #f2f2f2;
+}
+
+DL {
+    margin: 8px 0;
+    padding: 0;
+}
+
+DT {
+    display: inline-block;
+    width: 250px;
+}
+
+DD {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: top;
 }
 
 .table_header_outer {
@@ -176,6 +193,18 @@ PRE {
     border: none;
 }
 
+.img_icon {
+    height: 16px;
+    border: none;
+    margin-right: 5px;
+}
+
+.img_action {
+    height: 16px;
+    border: none;
+    margin-right: 5px;
+}
+
 .rasporka {
     width: 150px;
 }
@@ -193,15 +222,16 @@ PRE {
     padding-top: 4px;
     padding-bottom: 4px;
     color: #2f3628;
-    font-size: 12pt;
-    margin: 8px;
+    font-size: 10pt;
+    margin-top: 10px;
+    margin-left: -5px;
 }
 
 .table_output {
     width: 100%;
     border-style: none;
-    border-collapse: collapse;
-    border-spacing: 0;
+    border-collapse: separate;
+    border-spacing: 5px;
 }
 
 .thead_output {
@@ -210,7 +240,7 @@ PRE {
 }
 
 .tbody_output {
-    background-color: #f2f2f2;
+    background-color: #e8e8e8;
 }
 
 .th_td_output {

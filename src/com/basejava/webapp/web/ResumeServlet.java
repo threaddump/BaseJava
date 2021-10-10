@@ -104,7 +104,7 @@ public class ResumeServlet extends HttpServlet {
         action = (action == null) ? "" : action;
 
         String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
+        String fullName = HtmlSnippets.escapeHTML(request.getParameter("fullName"));
 
         Resume r = null;
         switch (action) {

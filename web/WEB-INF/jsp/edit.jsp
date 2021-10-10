@@ -80,10 +80,12 @@
                                 <div class="form_div">
                                     <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
-                                        <!-- TODO: not really clear how to initialize value, especially if section can be missing.
-                                        ensure that sections are non-null? will require changes in viewing...
-                                        maybe add isEmpty() method to Section interface? -->
-                                        <input type="text" name="${sectionType.name()}" id="${sectionType.name()}" value="TODO" />
+                            <!-- TODO: not really clear how to initialize value, especially if section can be missing.
+                                ensure that sections are non-null? will require changes in viewing...
+                                maybe add isEmpty() method to Section interface? -->
+
+                                        <textarea name="${sectionType.name()}" id="${sectionType.name()}"
+                                                  oninput="strip_newline(this); auto_height(this);">TODO</textarea>
                                     </span>
                                 </div>
                             </c:when>

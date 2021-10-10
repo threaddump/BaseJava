@@ -278,6 +278,7 @@ TEXTAREA {
     display: table-cell;
     width: 250px;
     white-space: nowrap;
+    vertical-align: top;
 }
 
 .form_span {

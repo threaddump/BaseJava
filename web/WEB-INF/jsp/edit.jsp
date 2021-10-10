@@ -8,6 +8,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="js/script.js"></script>
     <jsp:useBean id="resume" type="com.basejava.webapp.model.Resume" scope="request"/>
     <jsp:useBean id="storageAction" type="java.lang.String" scope="request"/>
 
@@ -69,18 +70,43 @@
                 <hr />
 
                 <br />
-                <h3>Секции:</h3>
+                <h3 style="padding-left: 5px;">Секции:</h3>
                 <p>
                     <c:forEach var="sectionType" items="<%=SectionType.values()%>">
-                    <jsp:useBean id="sectionType" type="com.basejava.webapp.model.SectionType"/>
-                        <dl>
-                            <dt>${sectionType.title}</dt>
-                            <dd><input type="text" name="${sectionType.name()}" size="30" value="TODO"></dd>
-                        </dl>
+                        <jsp:useBean id="sectionType" type="com.basejava.webapp.model.SectionType" />
+                        <c:choose>
+
+                            <c:when test="${(sectionType == SectionType.OBJECTIVE) || (sectionType == SectionType.PERSONAL)}">
+                                <div class="form_div">
+                                    <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
+                                    <span class="form_span">
+                                        <!-- TODO: not really clear how to initialize value, especially if section can be missing.
+                                        ensure that sections are non-null? will require changes in viewing...
+                                        maybe add isEmpty() method to Section interface? -->
+                                        <input type="text" name="${sectionType.name()}" id="${sectionType.name()}" value="TODO" />
+                                    </span>
+                                </div>
+                            </c:when>
+
+                            <c:when test="${(sectionType == SectionType.ACHIEVEMENT) || (sectionType == SectionType.QUALIFICATIONS)}">
+                                <div class="form_div">
+                                    <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
+                                    <span class="form_span">
+                                        <textarea name="${sectionType.name()}" id="${sectionType.name()}"
+                                                  oninput="auto_height(this);">TODO</textarea>
+                                    </span>
+                                </div>
+                            </c:when>
+
+                            <c:when test="${(sectionType == SectionType.EXPERIENCE) || (sectionType == SectionType.EDUCATION)}">
+                                <p>${sectionType.title} is not supported yet</p>
+                            </c:when>
+
+                        </c:choose>
                     </c:forEach>
                 </p>
 
-                <!-- TODO -->
+                <!--
                 <br>
                 <dl>
                     <dt>поле раз:</dt>
@@ -90,6 +116,7 @@
                     <dt>поле два-с:</dt>
                     <dd><input type="text" name="TESTFIELD" size=50 value="${resume.fullName}"></dd>
                 </dl>
+                -->
                 <!-- params with the same name can be retrieved using request.getParameterValues(name) -->
 
                 <hr />

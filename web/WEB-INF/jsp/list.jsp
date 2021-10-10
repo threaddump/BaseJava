@@ -1,6 +1,5 @@
 <%@ page import="com.basejava.webapp.model.Resume" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
-<%@ page import="com.basejava.webapp.web.ContactRenderer" %>
 <%@ page import="com.basejava.webapp.model.ContactType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -42,7 +41,12 @@
                             <%=HtmlSnippets.getAckDeleteButton(resume.getUuid())%>&nbsp;<%=HtmlSnippets.getEditButton(resume.getUuid())%>
                         </td>
                         <td class="th_td_list_resume"><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
-                        <td class="th_td_list_resume"><%=ContactRenderer.getEmailHref(resume.getContact(ContactType.EMAIL))%></td>
+                        <td class="th_td_list_resume">
+                            <c:set var="email" value="<%=resume.getContact(ContactType.EMAIL)%>" />
+                            <c:if test="${not empty email}">
+                                <a href="mailto:${email}">${email}</a>
+                            </c:if>
+                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>

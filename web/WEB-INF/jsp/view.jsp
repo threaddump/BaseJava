@@ -1,9 +1,9 @@
+<%@ page import="com.basejava.webapp.model.ContactType" %>
 <%@ page import="com.basejava.webapp.model.SectionType" %>
 <%@ page import="com.basejava.webapp.model.TextSection" %>
 <%@ page import="com.basejava.webapp.model.ListSection" %>
 <%@ page import="com.basejava.webapp.model.OrgSection" %>
 <%@ page import="com.basejava.webapp.model.Position" %>
-<%@ page import="com.basejava.webapp.web.ContactRenderer" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -38,11 +38,44 @@
             <p>
                 <c:forEach var="contactEntry" items="${resume.contacts}">
                     <jsp:useBean id="contactEntry" type="java.util.Map.Entry<com.basejava.webapp.model.ContactType, java.lang.String>" />
-                    <%=ContactRenderer.toHtml(contactEntry.getKey(), contactEntry.getValue())%><br>
+                    <c:set var="contactType" value="${contactEntry.key}" />
+                    <jsp:useBean id="contactType" type="com.basejava.webapp.model.ContactType" />
+                    <c:set var="contactValue" value="${contactEntry.value}" />
+
+                    <c:choose>
+                        <c:when test="${(contactType == ContactType.PHONE) || (contactType == ContactType.HOME_PHONE)}">
+                            ${contactType.title}: <img src="img/icon/phone.svg" class="img_icon">${contactValue}
+                        </c:when>
+                        <c:when test="${contactType == ContactType.MOBILE_PHONE}">
+                            ${contactType.title}: <img src="img/icon/mobile.svg" class="img_icon">${contactValue}
+                        </c:when>
+                        <c:when test="${contactType == ContactType.SKYPE}">
+                            ${contactType.title}: <a href="skype:${contactValue}"><img src="img/icon/skype.svg" class="img_icon">${contactValue}</a>
+                        </c:when>
+                        <c:when test="${contactType == ContactType.EMAIL}">
+                            ${contactType.title}: <a href="mailto:${contactValue}"><img src="img/icon/email.svg" class="img_icon">${contactValue}</a>
+                        </c:when>
+                        <c:when test="${contactType == ContactType.LINKEDIN}">
+                            <a href="https://www.linkedin.com/in/${contactValue}"><img src="img/icon/linkedin.svg" class="img_icon">Профиль LinkedIn</a>
+                        </c:when>
+                        <c:when test="${contactType == ContactType.GITHUB}">
+                            <a href="https://github.com/${contactValue}"><img src="img/icon/github.svg" class="img_icon">Профиль GitHub</a>
+                        </c:when>
+                        <c:when test="${contactType == ContactType.STACKOVERFLOW}">
+                            <a href="https://stackoverflow.com/users/${contactValue}"><img src="img/icon/stackoverflow.svg" class="img_icon">Профиль StackOverflow</a>
+                        </c:when>
+                        <c:when test="${contactType == ContactType.HOME_PAGE}">
+                            <a href="${contactValue}">Домашняя страница</a>
+                        </c:when>
+                        <c:otherwise>
+                            (Неизвестный тип контакта: ${contactType.title})
+                        </c:otherwise>
+                    </c:choose>
+                    <br>
                 </c:forEach>
             </p>
 
-            <hr/>
+            <hr />
 
             <c:forEach var="sectionEntry" items="${resume.sections}">
                 <jsp:useBean id="sectionEntry" type="java.util.Map.Entry<com.basejava.webapp.model.SectionType, com.basejava.webapp.model.Section>" />
@@ -107,6 +140,10 @@
                             </table>
                         </c:forEach>
                     </c:when>
+
+                    <c:otherwise>
+                        (Неизвестный тип секции: ${sectionType.title})<br>
+                    </c:otherwise>
                 </c:choose>
             </c:forEach>
 

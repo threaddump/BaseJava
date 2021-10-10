@@ -21,9 +21,9 @@
             <h2>Подтверждение операции</h2>
             <p>Вы действительно хотите удалить резюме <b>${resume.fullName}</b>? Эта операция необратима.</p>
             <hr>
-            <a href="resume?action=list">Нет, вернуться к списку резюме</a><br>
-            <a href="resume?uuid=${resume.uuid}&action=view">Нет, вернуться к просмотру этого резюме</a><br>
-            <br>
+            <a href="resume?action=list">Нет, вернуться к списку резюме</a><br />
+            <a href="resume?uuid=${resume.uuid}&action=view">Нет, вернуться к просмотру этого резюме</a><br />
+            <br />
             <a href="resume?uuid=${resume.uuid}&action=delete" style="color: #ff0000;">Да, удалить резюме безвозвратно</a>
 
         </td>

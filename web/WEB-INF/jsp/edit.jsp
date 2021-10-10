@@ -16,7 +16,7 @@
     <%} else if (storageAction.equals("save")) {%>
         <title>Создание нового резюме</title>
     <%} else {
-        throw new IllegalStateException("Unable to find attribute: storageAction");
+        throw new IllegalStateException("Invalid attribute: storageAction");
     }%>
 
 </head>
@@ -45,24 +45,30 @@
                 <input type="hidden" name="uuid" value="${resume.uuid}">
                 <input type="hidden" name="action" value="${storageAction}">
 
-                <dl>
-                    <dt>Имя:</dt>
-                    <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
-                </dl>
+                <div class="form_div">
+                    <label for="fullName" class="form_label">Имя:</label>
+                    <span class="form_span">
+                        <input type="text" name="fullName" id="fullName" value="${resume.fullName}" />
+                    </span>
+                </div>
 
-                <br>
-                <h3>Контакты:</h3>
+                <br />
+                <h3 style="padding-left: 5px;">Контакты:</h3>
                 <p>
                     <c:forEach var="contactType" items="<%=ContactType.values()%>">
-                    <jsp:useBean id="contactType" type="com.basejava.webapp.model.ContactType"/>
-                    <dl>
-                        <dt>${contactType.title}</dt>
-                        <dd><input type="text" name="${contactType.name()}" size=30 value="${resume.getContact(contactType)}"></dd>
-                    </dl>
+                        <jsp:useBean id="contactType" type="com.basejava.webapp.model.ContactType" />
+                        <div class="form_div">
+                            <label for="${contactType.name()}" class="form_label">${contactType.title}:</label>
+                            <span class="form_span">
+                                <input type="text" name="${contactType.name()}" id="${contactType.name()}" value="${resume.getContact(contactType)}" />
+                            </span>
+                        </div>
                     </c:forEach>
                 </p>
 
-                <br>
+                <hr />
+
+                <br />
                 <h3>Секции:</h3>
                 <p>
                     <c:forEach var="sectionType" items="<%=SectionType.values()%>">
@@ -86,9 +92,8 @@
                 </dl>
                 <!-- params with the same name can be retrieved using request.getParameterValues(name) -->
 
-                <hr>
+                <hr />
                 <button type="submit">Сохранить</button>
-                <button type="reset">Сбросить</button>
             </form>
 
         </td>

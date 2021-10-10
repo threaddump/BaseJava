@@ -71,11 +71,13 @@
                             (Неизвестный тип контакта: ${contactType.title})
                         </c:otherwise>
                     </c:choose>
-                    <br>
+                    <br />
                 </c:forEach>
             </p>
 
-            <hr />
+            <c:if test="<%=resume.getSections().size() > 0%>">
+                <hr />
+            </c:if>
 
             <c:forEach var="sectionEntry" items="${resume.sections}">
                 <jsp:useBean id="sectionEntry" type="java.util.Map.Entry<com.basejava.webapp.model.SectionType, com.basejava.webapp.model.Section>" />
@@ -142,7 +144,7 @@
                     </c:when>
 
                     <c:otherwise>
-                        (Неизвестный тип секции: ${sectionType.title})<br>
+                        (Неизвестный тип секции: ${sectionType.title})<br />
                     </c:otherwise>
                 </c:choose>
             </c:forEach>

@@ -3,8 +3,6 @@ package com.basejava.webapp.web;
 import com.basejava.webapp.model.TimeSpan;
 import com.basejava.webapp.util.DateUtil;
 
-import java.util.stream.Collectors;
-
 // TODO: refactor
 public class HtmlSnippets {
 
@@ -49,17 +47,6 @@ public class HtmlSnippets {
 
     public static String getTimeSpanStr(TimeSpan timeSpan) {
         return DateUtil.format(timeSpan.getBegin()) + " - " + DateUtil.format(timeSpan.getEnd());
-    }
-
-//    public static String escapeHTML(String str) {
-//        return str.chars().mapToObj(c -> c > 127 || "\"'<>&".indexOf(c) != -1 ?
-//                "&#" + c + ";" : String.valueOf((char) c)).collect(Collectors.joining());
-//    }
-
-    public static String escapeHTML(String str) {
-        return str.codePoints().mapToObj(c -> c > 127 || "\"'<>&".indexOf(c) != -1 ?
-                        "&#" + c + ";" : new String(Character.toChars(c)))
-                .collect(Collectors.joining());
     }
 
     public static boolean isNullOrEmpty(String str) {

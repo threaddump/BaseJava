@@ -3,6 +3,7 @@ package com.basejava.webapp.web;
 import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.storage.factory.StorageFactory;
+import com.basejava.webapp.util.HtmlUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -111,7 +112,7 @@ public class ResumeServlet extends HttpServlet {
 
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        fullName = HtmlSnippets.escapeHTML(fullName);
+        fullName = HtmlUtils.escapeHtml(fullName);
 
         Resume r = null;
         switch (action) {
@@ -129,7 +130,7 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType contactType : ContactType.values()) {
             String contactValue = request.getParameter(contactType.name());
             if (!HtmlSnippets.isNullOrEmpty(contactValue)) {
-                contactValue = HtmlSnippets.escapeHTML(contactValue);
+                contactValue = HtmlUtils.escapeHtml(contactValue);
                 r.setContact(contactType, contactValue);
             } else {
                 r.getContacts().remove(contactType);
@@ -141,7 +142,7 @@ public class ResumeServlet extends HttpServlet {
                 case OBJECTIVE: case PERSONAL:
                     String textSectionValue = request.getParameter(sectionType.name());
                     if (!HtmlSnippets.isNullOrEmpty(textSectionValue)) {
-                        textSectionValue = HtmlSnippets.escapeHTML(textSectionValue);
+                        textSectionValue = HtmlUtils.escapeHtml(textSectionValue);
                         r.setSection(sectionType, new TextSection(textSectionValue));
                     } else {
                         r.getSections().remove(sectionType);
@@ -159,7 +160,7 @@ public class ResumeServlet extends HttpServlet {
                                             .toArray(String[]::new);
                     if (listSectionValue.length > 0) {
                         listSectionValue = Arrays.stream(listSectionValue)
-                                                .map(HtmlSnippets::escapeHTML)
+                                                .map(HtmlUtils::escapeHtml)
                                                 .toArray(String[]::new);
                         r.setSection(sectionType, new ListSection(listSectionValue));
                     } else {

@@ -15,6 +15,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="js/script.js"></script>
     <jsp:useBean id="resume" type="com.basejava.webapp.model.Resume" scope="request"/>
     <jsp:useBean id="storageAction" type="java.lang.String" scope="request"/>
@@ -134,8 +135,7 @@
                                             <!-- org removal button -->
                                             <div class="form_div">
                                                 <!-- TODO: js -->
-                                                <button id="${sectionType.name()}_remove_org_${counter.index}" class="button_remove"
-                                                        onclick="alert('bye ${counter.index}'); return false;">
+                                                <button id="${sectionType.name()}_remove_org_${counter.index}" class="button_remove">
                                                     <img src="img/action/cross.svg" class="img_action">Удалить организацию</button>
                                             </div>
 

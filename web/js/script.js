@@ -1,3 +1,5 @@
+// functions used by edit.jsp
+
 // automatic height resize for <textarea>
 function auto_height(obj) {
     obj.style.height = "1px";
@@ -8,3 +10,15 @@ function auto_height(obj) {
 function strip_newline(obj) {
     obj.value = obj.value.replace(/\n/g,'');
 }
+
+function set_remove_button_handler(wrapper_cls) {
+    $($(wrapper_cls)).on("click",".button_remove", function(e) {
+        e.preventDefault();
+        $(this).parent('div').parent('fieldset').remove();
+    });
+}
+
+$(document).ready(function() {
+    set_remove_button_handler(".EXPERIENCE_org_container");
+    set_remove_button_handler(".EDUCATION_org_container");
+});

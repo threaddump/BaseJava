@@ -9,6 +9,8 @@ import java.util.Objects;
 public class Link implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static final Link EMPTY = new Link("", "");
+
     private String title;
     private String url;
 

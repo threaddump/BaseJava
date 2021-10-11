@@ -5,6 +5,7 @@
 <%@ page import="com.basejava.webapp.model.OrgSection" %>
 <%@ page import="com.basejava.webapp.model.Position" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
+<%@ page import="com.basejava.webapp.util.HtmlUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -114,14 +115,7 @@
 
                             <c:set var="link" value="${organization.link}" />
                             <jsp:useBean id="link" type="com.basejava.webapp.model.Link" />
-                            <c:choose>
-                                <c:when test="${empty link.url}">
-                                    <h3>${link.title}</h3>
-                                </c:when>
-                                <c:otherwise>
-                                    <h3><a href="${link.url}" target="_blank">${link.title}</a></h3>
-                                </c:otherwise>
-                            </c:choose>
+                            <h3><%=HtmlUtils.makeHref(link)%></h3>
 
                             <table class="table_list_positions">
                                 <tbody>

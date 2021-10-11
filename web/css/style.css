@@ -283,10 +283,45 @@ TEXTAREA {
     display: table-cell;
     width: 250px;
     white-space: nowrap;
+    /* align top is necessary for big textareas */
     vertical-align: top;
 }
 
 .form_span {
     display: table-cell;
     padding: 0 0 0 0;
+}
+
+BUTTON > IMG {
+    vertical-align: middle;
+}
+
+FIELDSET {
+    border: 1px solid;
+    border-color: #c4c4c4;
+}
+
+.button_add {
+    background-color: #e8e8e8;
+    border-color: #f2f2f2;
+    width: 200px;
+    padding: 3px;
+    vertical-align: center;
+}
+
+.button_remove {
+    display: table-cell;
+    background-color: #e8e8e8;
+    border-color: #f2f2f2;
+    width: 200px;
+    padding: 3px;
+    vertical-align: center;
+}
+
+.button_submit {
+    background-color: #e8e8e8;
+    border-color: #f2f2f2;
+    width: 200px;
+    padding: 3px;
+    vertical-align: center;
 }

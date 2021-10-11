@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -129,7 +130,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (ContactType contactType : ContactType.values()) {
             String contactValue = request.getParameter(contactType.name());
-            if (!HtmlSnippets.isNullOrEmpty(contactValue)) {
+            if (!HtmlUtils.isNullOrEmpty(contactValue)) {
                 contactValue = HtmlUtils.escapeHtml(contactValue);
                 r.setContact(contactType, contactValue);
             } else {
@@ -141,7 +142,7 @@ public class ResumeServlet extends HttpServlet {
             switch (sectionType) {
                 case OBJECTIVE: case PERSONAL:
                     String textSectionValue = request.getParameter(sectionType.name());
-                    if (!HtmlSnippets.isNullOrEmpty(textSectionValue)) {
+                    if (!HtmlUtils.isNullOrEmpty(textSectionValue)) {
                         textSectionValue = HtmlUtils.escapeHtml(textSectionValue);
                         r.setSection(sectionType, new TextSection(textSectionValue));
                     } else {
@@ -156,7 +157,7 @@ public class ResumeServlet extends HttpServlet {
                     String[] listSectionValue = listSectionValueRaw.split("\\R");
                     // drop empty values
                     listSectionValue = Arrays.stream(listSectionValue)
-                                            .filter(s -> !HtmlSnippets.isNullOrEmpty(s))
+                                            .filter(s -> !HtmlUtils.isNullOrEmpty(s))
                                             .toArray(String[]::new);
                     if (listSectionValue.length > 0) {
                         listSectionValue = Arrays.stream(listSectionValue)
@@ -185,28 +186,36 @@ public class ResumeServlet extends HttpServlet {
         }
 
         request.setAttribute("resume", r);
-        request.getRequestDispatcher("/WEB-INF/jsp/view.jsp").forward(request, response);
+        response.sendRedirect("resume?uuid=" + uuid + "&action=view");
     }
 
     private void populateEmptySections(Resume r) {
         // replace null sections with empty objects
-        // nulls lead to "java.lang.InstantiationException: bean section not found within scope" in edit.jsp (WTF?!)
+        // nulls lead to "java.lang.InstantiationException: bean section not found within scope" in edit.jsp
         for (SectionType sectionType : SectionType.values()) {
             Section section = r.getSection(sectionType);
-            if (section == null) {
-                switch (sectionType) {
-                    case OBJECTIVE: case PERSONAL:
-                        section = TextSection.EMPTY;
-                        break;
-                    case ACHIEVEMENT: case QUALIFICATIONS:
-                        section = ListSection.EMPTY;
-                        break;
-                    case EXPERIENCE: case EDUCATION:
-                        // TODO:
-                        section = TextSection.EMPTY;
-                        //section = OrgSection.EMPTY;
-                        break;
-                }
+            switch (sectionType) {
+                case OBJECTIVE: case PERSONAL:
+                    section = (section != null) ? section : TextSection.EMPTY;
+                    break;
+                case ACHIEVEMENT: case QUALIFICATIONS:
+                    section = (section != null) ? section : ListSection.EMPTY;
+                    break;
+                case EXPERIENCE: case EDUCATION:
+                    List<Organization> nonEmptyOrgsList = new ArrayList<>();
+                    if (section != null) {
+                        for (Organization org : ((OrgSection) section).getOrgs()) {
+                            List<Position> nonEmptyPosList = new ArrayList<>();
+                            nonEmptyPosList.addAll(org.getPositions());
+                            nonEmptyPosList.add(Position.EMPTY);
+                            nonEmptyOrgsList.add(new Organization(org.getLink(), nonEmptyPosList));
+                        }
+                    }
+                    nonEmptyOrgsList.add(Organization.EMPTY);
+                    section = new OrgSection(nonEmptyOrgsList);
+                    // TODO: remove
+                    //section = TextSection.EMPTY;
+                    break;
             }
             r.setSection(sectionType, section);
         }

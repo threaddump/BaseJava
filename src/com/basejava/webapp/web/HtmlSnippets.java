@@ -49,7 +49,4 @@ public class HtmlSnippets {
         return DateUtil.format(timeSpan.getBegin()) + " - " + DateUtil.format(timeSpan.getEnd());
     }
 
-    public static boolean isNullOrEmpty(String str) {
-        return (str == null) || (str.trim().length() == 0);
-    }
 }

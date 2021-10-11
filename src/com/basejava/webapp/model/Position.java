@@ -9,6 +9,8 @@ import java.util.Objects;
 public class Position implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static final Position EMPTY = new Position(TimeSpan.EMPTY, "", "");
+
     private TimeSpan timeSpan;
     private String title;
     private String description;

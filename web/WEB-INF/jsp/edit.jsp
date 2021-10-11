@@ -4,7 +4,11 @@
 <%@ page import="com.basejava.webapp.model.Section" %>
 <%@ page import="com.basejava.webapp.model.TextSection" %>
 <%@ page import="com.basejava.webapp.model.ListSection" %>
+<%@ page import="com.basejava.webapp.model.OrgSection" %>
+<%@ page import="com.basejava.webapp.model.Organization" %>
+<%@ page import="com.basejava.webapp.model.Link" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
+<%@ page import="com.basejava.webapp.util.HtmlUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -82,13 +86,13 @@
                         <jsp:useBean id="section" type="com.basejava.webapp.model.Section" />
 
                         <c:choose>
-
                             <c:when test="${(sectionType == SectionType.OBJECTIVE) || (sectionType == SectionType.PERSONAL)}">
                                 <div class="form_div">
                                     <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
-                                        <textarea name="${sectionType.name()}" oninput="strip_newline(this); auto_height(this);"
-                                                  id="${sectionType.name()}"><%=((TextSection) section).getContent()%></textarea>
+                                        <textarea name="${sectionType.name()}" id="${sectionType.name()}"
+                                                  oninput="strip_newline(this); auto_height(this);"
+                                                  onfocus="auto_height(this);"><%=((TextSection) section).getContent()%></textarea>
                                     </span>
                                 </div>
                             </c:when>
@@ -98,13 +102,70 @@
                                     <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
                                         <textarea name="${sectionType.name()}" id="${sectionType.name()}"
-                                                  oninput="auto_height(this);"><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
+                                                  oninput="auto_height(this);" onfocus="auto_height(this);"
+                                                  ><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
                                     </span>
                                 </div>
                             </c:when>
 
                             <c:when test="${(sectionType == SectionType.EXPERIENCE) || (sectionType == SectionType.EDUCATION)}">
-                                <p>Section <b>${sectionType.title}</b> is not supported yet</p>
+                                <c:set var="orgSection" value="<%=(OrgSection) section%>" />
+                                <jsp:useBean id="orgSection" type="com.basejava.webapp.model.OrgSection" />
+
+                                <!-- section header with an org addition button -->
+                                <div class="form_div">
+                                    <label for="${sectionType.name()}_add_org" class="form_label">${sectionType.title}:</label>
+                                    <span class="form_span">
+                                        <!-- TODO: js -->
+                                        <button id="${sectionType.name()}_add_org" class="button_add"
+                                                onclick="alert('hi'); return false;">
+                                            <img src="img/action/plus.svg" class="img_action">Добавить организацию</button>
+                                    </span>
+                                    <!-- for js -->
+                                    <input type="hidden" name="${sectionType.name()}_org_counter" value="${orgSection.orgs.size()}">
+                                </div>
+
+                                <!-- organizations wrapped in fieldset tag -->
+                                <div class="${sectionType.name()}_org_container" style="">
+                                    <c:forEach var="organization" items="${orgSection.orgs}" varStatus="counter">
+                                        <jsp:useBean id="organization" type="com.basejava.webapp.model.Organization" />
+
+                                        <fieldset id="${sectionType.name()}_fieldset_org_${counter.index}">
+                                            <!-- org removal button -->
+                                            <div class="form_div">
+                                                <!-- TODO: js -->
+                                                <button id="${sectionType.name()}_remove_org_${counter.index}" class="button_remove"
+                                                        onclick="alert('bye ${counter.index}'); return false;">
+                                                    <img src="img/action/cross.svg" class="img_action">Удалить организацию</button>
+                                            </div>
+
+                                            <!-- display inputs for link (title and url) -->
+                                            <c:set var="link" value="${organization.link}" />
+                                            <jsp:useBean id="link" type="com.basejava.webapp.model.Link" />
+
+                                            <div class="form_div">
+                                                <label for="${sectionType.name()}_org_title_${counter.index}" class="form_label">Название:</label>
+                                                <span class="form_span">
+                                                    <input type="text" name="${sectionType.name()}_org_title_${counter.index}"
+                                                           id="${sectionType.name()}_org_title_${counter.index}" value="${link.title}" />
+                                                </span>
+                                            </div>
+
+                                            <div class="form_div">
+                                                <label for="${sectionType.name()}_org_url_${counter.index}" class="form_label">URL сайта:</label>
+                                                <span class="form_span">
+                                                    <input type="text" name="${sectionType.name()}_org_url_${counter.index}"
+                                                           id="${sectionType.name()}_org_url_${counter.index}" value="${link.url}" />
+                                                </span>
+                                            </div>
+
+
+                                        </fieldset>
+                                    </c:forEach>
+                                </div>
+
+                                <!-- new line after org -->
+                                <br />
                             </c:when>
 
                         </c:choose>
@@ -125,7 +186,7 @@
                 <!-- params with the same name can be retrieved using request.getParameterValues(name) -->
 
                 <hr />
-                <button type="submit">Сохранить</button>
+                <button type="submit" class="button_submit">Сохранить</button>
             </form>
 
         </td>

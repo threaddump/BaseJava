@@ -1,5 +1,6 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.util.DateUtil;
 import com.basejava.webapp.util.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,6 +13,8 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TimeSpan implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final TimeSpan EMPTY = new TimeSpan(DateUtil.NOW, DateUtil.NOW);
 
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate begin;

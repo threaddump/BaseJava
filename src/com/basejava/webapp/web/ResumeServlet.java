@@ -1,5 +1,6 @@
 package com.basejava.webapp.web;
 
+import com.basejava.webapp.Config;
 import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.storage.factory.StorageFactory;
@@ -12,16 +13,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
 
     private Storage storage;
+    private String lockedUuids;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         storage = StorageFactory.getStorage();
+        lockedUuids = Config.get().getLockedUuids();
     }
 
     @Override
@@ -76,6 +82,7 @@ public class ResumeServlet extends HttpServlet {
 
     private void handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String uuid = request.getParameter("uuid");
+        checkLockedUuid(uuid);
         storage.delete(uuid);
         response.sendRedirect("resume");
     }
@@ -91,11 +98,21 @@ public class ResumeServlet extends HttpServlet {
 
     private void handleEdit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
+        checkLockedUuid(uuid);
         Resume r = storage.get(uuid);
         populateEmptySections(r);
         request.setAttribute("resume", r);
         request.setAttribute("storageAction", "update");
         request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
+    }
+
+    private void checkLockedUuid(String uuid) {
+        if (uuid == null) return;
+        for (String uuidToCheck : lockedUuids.split(",")) {
+            if (uuid.equals(uuidToCheck)) {
+                throw new IllegalStateException("Resume for uuid=" + uuid + " is locked from changes");
+            }
+        }
     }
 
     private void populateEmptySections(Resume r) {

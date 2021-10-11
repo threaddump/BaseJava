@@ -34,4 +34,8 @@ public class Config {
                 props.getProperty("storage.read.only")
                 );
     }
+
+    public String getLockedUuids() {
+        return props.getProperty("locked.uuids");
+    }
 }

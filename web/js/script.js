@@ -16,9 +16,9 @@ function strip_newline(obj) {
 }
 
 function setup_textarea_handlers() {
-    $('.textarea_single_line').on('input', function (e) { strip_newline(this); });
-    $('textarea').on('focus', function (e) { auto_height(this); });
-    $('textarea').on('input', function (e) { auto_height(this); });
+    $(document).on('input', '.textarea_single_line', function (e) { strip_newline(this); });
+    $(document).on('focus', 'textarea', function (e) { auto_height(this); });
+    $(document).on('input', 'textarea', function (e) { auto_height(this); });
 }
 
 // --------------------------------------------------------------------------------------------

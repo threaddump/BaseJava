@@ -3,7 +3,7 @@ package com.basejava.webapp.web;
 import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.Storage;
 import com.basejava.webapp.storage.factory.StorageFactory;
-import com.basejava.webapp.util.DateUtil;
+import com.basejava.webapp.util.DateUtils;
 import com.basejava.webapp.util.HtmlUtils;
 
 import javax.servlet.ServletConfig;
@@ -222,7 +222,7 @@ public class ResumeServlet extends HttpServlet {
                             // parse time span
                             String posBegin = request.getParameter(posIndexedPrefix + "_begin");
                             String posEnd = request.getParameter(posIndexedPrefix + "_end");
-                            TimeSpan timeSpan = new TimeSpan(DateUtil.parse(posBegin), DateUtil.parse(posEnd));
+                            TimeSpan timeSpan = new TimeSpan(DateUtils.parse(posBegin), DateUtils.parse(posEnd));
 
                             // parse other attributes
                             String posTitle = request.getParameter(posIndexedPrefix + "_title");

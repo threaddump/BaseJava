@@ -10,7 +10,8 @@
 <%@ page import="com.basejava.webapp.model.Position" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
 <%@ page import="com.basejava.webapp.util.HtmlUtils" %>
-<%@ page import="com.basejava.webapp.util.DateUtil" %>
+<%@ page import="com.basejava.webapp.util.DateUtils" %>
+<%@ page import="com.basejava.webapp.util.DateUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -196,7 +197,7 @@
                                                             <span class="form_span">
                                                                 <input type="text" name="${posIndexedPrefix}_begin"
                                                                        id="${posIndexedPrefix}_begin"
-                                                                       value="<%=DateUtil.format(position.getTimeSpan().getBegin())%>"
+                                                                       value="<%=DateUtils.format(position.getTimeSpan().getBegin())%>"
                                                                        placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;" />
                                                             </span>
                                                         </div>
@@ -206,7 +207,7 @@
                                                             <span class="form_span">
                                                                 <input type="text" name="${posIndexedPrefix}_end"
                                                                        id="${posIndexedPrefix}_end"
-                                                                       value="<%=DateUtil.format(position.getTimeSpan().getEnd())%>"
+                                                                       value="<%=DateUtils.format(position.getTimeSpan().getEnd())%>"
                                                                        placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;" />
                                                             </span>
                                                         </div>

@@ -1,12 +1,13 @@
 package com.basejava.webapp.util;
 
+import com.basejava.webapp.model.TimeSpan;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
-// TODO: refactor
-public class DateUtil {
+public class DateUtils {
     public static final LocalDate NOW = LocalDate.MAX;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
 
@@ -18,11 +19,15 @@ public class DateUtil {
         return ld.equals(NOW) ? "Сейчас" : ld.format(FORMATTER);
     }
 
+    public static String format(TimeSpan ts) {
+        return format(ts.getBegin()) + " - " + format(ts.getEnd());
+    }
+
     public static LocalDate parse(String str) {
         if (HtmlUtils.isNullOrEmpty(str) || str.equals("Сейчас")) {
             return NOW;
         }
         YearMonth ym = YearMonth.parse(str, FORMATTER);
-        return DateUtil.of(ym.getYear(), ym.getMonth());
+        return DateUtils.of(ym.getYear(), ym.getMonth());
     }
 }

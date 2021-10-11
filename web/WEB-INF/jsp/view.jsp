@@ -6,6 +6,7 @@
 <%@ page import="com.basejava.webapp.model.Position" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
 <%@ page import="com.basejava.webapp.util.HtmlUtils" %>
+<%@ page import="com.basejava.webapp.util.DateUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -121,7 +122,7 @@
                                     <c:forEach var="position" items="${organization.positions}">
                                         <jsp:useBean id="position" type="com.basejava.webapp.model.Position" />
                                         <tr>
-                                            <td class="td_list_positions_1"><%=HtmlSnippets.getTimeSpanStr(position.getTimeSpan())%></td>
+                                            <td class="td_list_positions_1"><%=DateUtils.format(position.getTimeSpan())%></td>
                                             <td class="td_list_positions_2"><b>${position.title}</b></td>
                                         </tr>
                                         <c:set var="posDescription" value="${position.description}" />

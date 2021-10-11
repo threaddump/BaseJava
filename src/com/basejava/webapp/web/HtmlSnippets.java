@@ -1,9 +1,5 @@
 package com.basejava.webapp.web;
 
-import com.basejava.webapp.model.TimeSpan;
-import com.basejava.webapp.util.DateUtil;
-
-// TODO: refactor
 public class HtmlSnippets {
 
     public static String getCreateLink() {
@@ -44,9 +40,4 @@ public class HtmlSnippets {
         return " onmouseover=\"document.getElementById('bubble_" + id + "').style.display='block'\"" +
                 " onmouseout=\"document.getElementById('bubble_" + id + "').style.display='none'\" ";
     }
-
-    public static String getTimeSpanStr(TimeSpan timeSpan) {
-        return DateUtil.format(timeSpan.getBegin()) + " - " + DateUtil.format(timeSpan.getEnd());
-    }
-
 }

@@ -11,7 +11,8 @@ public class ObjectPathStorageTest extends AbstractStorageTest {
             "OBJECT_STREAM",
             null,
             null,
-            null
+            null,
+            "FALSE"
     );
 
     public ObjectPathStorageTest() {

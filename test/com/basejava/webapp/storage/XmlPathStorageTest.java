@@ -11,7 +11,8 @@ public class XmlPathStorageTest extends AbstractStorageTest {
             "XML",
             null,
             null,
-            null
+            null,
+            "FALSE"
     );
 
     public XmlPathStorageTest() {

@@ -11,7 +11,8 @@ public class JsonPathStorageTest extends AbstractStorageTest {
             "JSON",
             null,
             null,
-            null
+            null,
+            "FALSE"
     );
 
     public JsonPathStorageTest() {

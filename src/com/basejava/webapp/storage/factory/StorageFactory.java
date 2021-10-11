@@ -21,36 +21,50 @@ public class StorageFactory {
     }
 
     private static Storage getStorage(StorageType storageType, StorageConfig cfg) {
+        Storage storage = null;
         switch (storageType) {
             case ARRAY:
-                return new ArrayStorage();
+                storage = new ArrayStorage();
+                break;
             case SORTED_ARRAY:
-                return new SortedArrayStorage();
+                storage = new SortedArrayStorage();
+                break;
             case LIST:
-                return new ListStorage();
+                storage = new ListStorage();
+                break;
             case MAP_UUID:
-                return new MapUuidStorage();
+                storage = new MapUuidStorage();
+                break;
             case MAP_RESUME:
-                return new MapResumeStorage();
+                storage = new MapResumeStorage();
+                break;
             case FILE:
-                return new FileStorage(
+                storage = new FileStorage(
                         new File(cfg.getStorageDir()),
                         getStreamSerializer(cfg)
                 );
+                break;
             case PATH:
-                return new PathStorage(
+                storage = new PathStorage(
                         cfg.getStorageDir(),
                         getStreamSerializer(cfg)
                 );
+                break;
             case SQL:
-                return new SqlStorage(
+                storage = new SqlStorage(
                         cfg.getDbUrl(),
                         cfg.getDbUsername(),
                         cfg.getDbPassword()
                 );
+                break;
             default:
                 throw new IllegalStateException("Unknown storageType = " + storageType);
         }
+
+        if (cfg.isReadOnly()) {
+            storage = new ReadOnlyStorageDecorator(storage);
+        }
+        return storage;
     }
 
     private static StreamSerializer getStreamSerializer(StorageConfig cfg) {

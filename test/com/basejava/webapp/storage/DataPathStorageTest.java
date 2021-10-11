@@ -11,7 +11,8 @@ public class DataPathStorageTest extends AbstractStorageTest {
             "DATA_STREAM",
             null,
             null,
-            null
+            null,
+            "FALSE"
     );
 
     public DataPathStorageTest() {

@@ -12,7 +12,8 @@ public class SqlStorageTest extends AbstractStorageTest {
             null,
             Config.get().getStorageConfig().getDbUrl(),
             Config.get().getStorageConfig().getDbUsername(),
-            Config.get().getStorageConfig().getDbPassword()
+            Config.get().getStorageConfig().getDbPassword(),
+            "FALSE"
     );
 
     public SqlStorageTest() { super(StorageFactory.getStorage(cfg)); }

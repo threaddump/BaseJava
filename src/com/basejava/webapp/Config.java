@@ -30,7 +30,8 @@ public class Config {
                 props.getProperty("serializer.type"),
                 props.getProperty("db.url"),
                 props.getProperty("db.user"),
-                props.getProperty("db.password")
+                props.getProperty("db.password"),
+                props.getProperty("storage.read.only")
                 );
     }
 }

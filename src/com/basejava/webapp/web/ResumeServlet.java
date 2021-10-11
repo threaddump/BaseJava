@@ -111,14 +111,17 @@ public class ResumeServlet extends HttpServlet {
                     section = (section != null) ? section : ListSection.EMPTY;
                     break;
                 case EXPERIENCE: case EDUCATION:
-                    List<Organization> nonEmptyOrgsList = new ArrayList<>();
-                    nonEmptyOrgsList.add(Organization.EMPTY);
+                    // Organizations and positions are sent to edit.jsp in reverse order,
+                    // insertion of new fields in the beginning of the form and
+                    // consequent parsing will be a mess otherwise.
+                    // The order will be reversed back in parsing, so view.jsp
+                    // is not affected.
+                    LinkedList<Organization> nonEmptyOrgsList = new LinkedList<>();
                     if (section != null) {
                         for (Organization org : ((OrgSection) section).getOrgs()) {
-                            List<Position> nonEmptyPosList = new ArrayList<>();
-                            nonEmptyPosList.add(Position.EMPTY);
-                            nonEmptyPosList.addAll(org.getPositions());
-                            nonEmptyOrgsList.add(new Organization(org.getLink(), nonEmptyPosList));
+                            LinkedList<Position> nonEmptyPosList = new LinkedList<>();
+                            org.getPositions().stream().forEach(nonEmptyPosList::addFirst);
+                            nonEmptyOrgsList.addFirst(new Organization(org.getLink(), nonEmptyPosList));
                         }
                     }
                     section = new OrgSection(nonEmptyOrgsList);
@@ -195,7 +198,7 @@ public class ResumeServlet extends HttpServlet {
                     break;
                 case EXPERIENCE: case EDUCATION:
                     // parse organizations
-                    List<Organization> orgsList = new ArrayList<>();
+                    LinkedList<Organization> orgsList = new LinkedList<>();
                     final String orgPrefix = sectionType.name() + "_org";
                     int orgCounter = Integer.parseInt(request.getParameter(orgPrefix + "_counter"));
                     for (int orgIdx = 0; orgIdx < orgCounter; orgIdx++) {
@@ -210,7 +213,7 @@ public class ResumeServlet extends HttpServlet {
                         Link orgLink = new Link(HtmlUtils.escapeHtml(orgTitle), HtmlUtils.escapeHtml(orgUrl));
 
                         // parse positions
-                        List<Position> orgPositions = new ArrayList<>();
+                        LinkedList<Position> orgPositions = new LinkedList<>();
                         final String posPrefix = orgIndexedPrefix + "_pos";
                         int posCounter = Integer.parseInt(request.getParameter(posPrefix + "_counter"));
                         for (int posIdx = 0; posIdx < posCounter; posIdx++) {
@@ -230,10 +233,11 @@ public class ResumeServlet extends HttpServlet {
 
                             posTitle = HtmlUtils.escapeHtml(posTitle);
                             posDesc = HtmlUtils.escapeHtml(posDesc);
-                            orgPositions.add(new Position(timeSpan, posTitle, posDesc));
+                            // TODO: normalize linebreaks? also in other multiline fields?
+                            orgPositions.addFirst(new Position(timeSpan, posTitle, posDesc));
                         }
 
-                        orgsList.add(new Organization(orgLink, orgPositions));
+                        orgsList.addFirst(new Organization(orgLink, orgPositions));
                     }
 
                     if (!orgsList.isEmpty()) {

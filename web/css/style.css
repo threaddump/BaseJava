@@ -15,36 +15,36 @@ H1 {
 H2 {
     margin-top: 0;
     margin-bottom: 0;
-    letter-spacing: 5pt;
-    font-size: 22pt;
-}
-
-H3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    letter-spacing: 2pt;
+    letter-spacing: 4pt;
     font-size: 20pt;
 }
 
-H4 {
+H3 {
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 1pt;
     font-size: 18pt;
 }
 
-H5 {
+H4 {
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 1pt;
     font-size: 16pt;
 }
 
+H5 {
+    margin-top: 0;
+    margin-bottom: 0;
+    letter-spacing: 1pt;
+    font-size: 14pt;
+}
+
 H6 {
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 1pt;
-    font-size: 15pt;
+    font-size: 12pt;
 }
 
 A:hover {

@@ -92,7 +92,7 @@
 
                 <c:choose>
                     <c:when test="${sectionType == SectionType.OBJECTIVE}">
-                        <p><b><%=((TextSection) section).getContent()%></b></p>
+                        <p><h3><%=((TextSection) section).getContent()%></h3></p>
                     </c:when>
                     <c:when test="${sectionType == SectionType.PERSONAL}">
                         <p><%=((TextSection) section).getContent()%></p>

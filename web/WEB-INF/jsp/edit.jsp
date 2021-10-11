@@ -120,14 +120,12 @@
                                 <div class="form_div ${orgPrefix}_header" style="">
                                     <label for="${orgPrefix}_add" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
-                                        <!-- TODO: js -->
                                         <button id="${orgPrefix}_add" class="button_add org_add">
                                             <img src="img/action/plus.svg" class="img_action">Добавить организацию</button>
                                     </span>
-                                    <!-- for js -->
-                                    <input type="text" name="${orgPrefix}_counter"
+                                    <input type="hidden" name="${orgPrefix}_counter"
                                            class="editor_counter" value="${orgSection.orgs.size()}" />
-                                    <input type="text" name="${orgPrefix}_prefix"
+                                    <input type="hidden" name="${orgPrefix}_prefix"
                                            class="editor_prefix" value="${orgPrefix}" />
                                 </div>
 
@@ -169,14 +167,12 @@
                                             <div class="form_div ${posPrefix}_header" style="">
                                                 <label class="form_label"></label>
                                                 <span class="form_span">
-                                                     <!-- TODO: js -->
                                                     <button id="${posPrefix}_add" class="button_add pos_add">
                                                         <img src="img/action/plus.svg" class="img_action">Добавить позицию</button>
                                                 </span>
-                                                <!-- for js -->
-                                                <input type="text" name="${posPrefix}_counter"
+                                                <input type="hidden" name="${posPrefix}_counter"
                                                        class="editor_counter" value="${organization.positions.size()}" />
-                                                <input type="text" name="${posPrefix}_prefix"
+                                                <input type="hidden" name="${posPrefix}_prefix"
                                                        class="editor_prefix" value="${posPrefix}" />
                                             </div>
 

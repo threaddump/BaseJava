@@ -7,16 +7,21 @@
 <%@ page import="com.basejava.webapp.model.OrgSection" %>
 <%@ page import="com.basejava.webapp.model.Organization" %>
 <%@ page import="com.basejava.webapp.model.Link" %>
+<%@ page import="com.basejava.webapp.model.Position" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
 <%@ page import="com.basejava.webapp.util.HtmlUtils" %>
+<%@ page import="com.basejava.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css" type="text/css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="js/script.js"></script>
+
     <jsp:useBean id="resume" type="com.basejava.webapp.model.Resume" scope="request"/>
     <jsp:useBean id="storageAction" type="java.lang.String" scope="request"/>
 
@@ -27,7 +32,6 @@
     <%} else {
         throw new IllegalStateException("Invalid attribute: storageAction");
     }%>
-
 </head>
 <body>
 <jsp:include page="inc/header.jsp"/>
@@ -57,7 +61,7 @@
                 <div class="form_div">
                     <label for="fullName" class="form_label">Имя:</label>
                     <span class="form_span">
-                        <input type="text" name="fullName" id="fullName" value="${resume.fullName}" />
+                        <input type="text" name="fullName" id="fullName" value="${resume.fullName}" required />
                     </span>
                 </div>
 
@@ -92,8 +96,7 @@
                                     <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
                                         <textarea name="${sectionType.name()}" id="${sectionType.name()}"
-                                                  oninput="strip_newline(this); auto_height(this);"
-                                                  onfocus="auto_height(this);"><%=((TextSection) section).getContent()%></textarea>
+                                                  class="textarea_single_line"><%=((TextSection) section).getContent()%></textarea>
                                     </span>
                                 </div>
                             </c:when>
@@ -103,8 +106,7 @@
                                     <label for="${sectionType.name()}" class="form_label">${sectionType.title}:</label>
                                     <span class="form_span">
                                         <textarea name="${sectionType.name()}" id="${sectionType.name()}"
-                                                  oninput="auto_height(this);" onfocus="auto_height(this);"
-                                                  ><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
+                                                ><%=String.join("\n", ((ListSection) section).getItems())%></textarea>
                                     </span>
                                 </div>
                             </c:when>
@@ -113,32 +115,32 @@
                                 <c:set var="orgSection" value="<%=(OrgSection) section%>" />
                                 <jsp:useBean id="orgSection" type="com.basejava.webapp.model.OrgSection" />
 
-                                <!-- section header with an org addition button -->
-                                <div class="${sectionType.name()}_org_header" style="">
-                                    <div class="form_div">
-                                        <label for="${sectionType.name()}_add_org" class="form_label">${sectionType.title}:</label>
-                                        <span class="form_span">
-                                            <!-- TODO: js -->
-                                            <button id="${sectionType.name()}_add_org" class="button_add">
-                                                <img src="img/action/plus.svg" class="img_action">Добавить организацию</button>
-                                        </span>
-                                        <!-- for js -->
-                                        <input type="hidden" name="${sectionType.name()}_org_counter" value="${orgSection.orgs.size()}">
-                                    </div>
+                                <!-- header with an org addition button -->
+                                <c:set var="orgPrefix" value="${sectionType.name()}_org" />
+                                <div class="form_div ${orgPrefix}_header" style="">
+                                    <label for="${orgPrefix}_add" class="form_label">${sectionType.title}:</label>
+                                    <span class="form_span">
+                                        <!-- TODO: js -->
+                                        <button id="${orgPrefix}_add" class="button_add org_add">
+                                            <img src="img/action/plus.svg" class="img_action">Добавить организацию</button>
+                                    </span>
+                                    <!-- for js -->
+                                    <input type="text" name="${orgPrefix}_counter"
+                                           class="editor_counter" value="${orgSection.orgs.size()}" />
+                                    <input type="text" name="${orgPrefix}_prefix"
+                                           class="editor_prefix" value="${orgPrefix}" />
                                 </div>
 
                                 <!-- organizations wrapped in fieldset tag -->
-                                <div class="${sectionType.name()}_org_container" style="">
-
-                                    <!-- orgs -->
-                                    <c:forEach var="organization" items="${orgSection.orgs}" varStatus="counter">
+                                <div class="${orgPrefix}_container" style="">
+                                    <c:forEach var="organization" items="${orgSection.orgs}" varStatus="orgCounter">
                                         <jsp:useBean id="organization" type="com.basejava.webapp.model.Organization" />
+                                        <c:set var="orgIndexedPrefix" value="${orgPrefix}_${orgCounter.index}" />
 
-                                        <fieldset id="${sectionType.name()}_fieldset_org_${counter.index}">
+                                        <fieldset id="${orgIndexedPrefix}_fieldset">
                                             <!-- org removal button -->
                                             <div class="form_div">
-                                                <!-- TODO: js -->
-                                                <button id="${sectionType.name()}_remove_org_${counter.index}" class="button_remove">
+                                                <button id="${orgIndexedPrefix}_remove" class="button_remove">
                                                     <img src="img/action/cross.svg" class="img_action">Удалить организацию</button>
                                             </div>
 
@@ -147,21 +149,91 @@
                                             <jsp:useBean id="link" type="com.basejava.webapp.model.Link" />
 
                                             <div class="form_div">
-                                                <label for="${sectionType.name()}_org_title_${counter.index}" class="form_label">Название:</label>
+                                                <label for="${orgIndexedPrefix}_title" class="form_label">Название:</label>
                                                 <span class="form_span">
-                                                    <input type="text" name="${sectionType.name()}_org_title_${counter.index}"
-                                                           id="${sectionType.name()}_org_title_${counter.index}" value="${link.title}" />
+                                                    <input type="text" name="${orgIndexedPrefix}_title"
+                                                           id="${orgIndexedPrefix}_title" value="${link.title}" />
                                                 </span>
                                             </div>
 
                                             <div class="form_div">
-                                                <label for="${sectionType.name()}_org_url_${counter.index}" class="form_label">URL сайта:</label>
+                                                <label for="${orgIndexedPrefix}_url" class="form_label">URL сайта:</label>
                                                 <span class="form_span">
-                                                    <input type="text" name="${sectionType.name()}_org_url_${counter.index}"
-                                                           id="${sectionType.name()}_org_url_${counter.index}" value="${link.url}" />
+                                                    <input type="text" name="${orgIndexedPrefix}_url"
+                                                           id="${orgIndexedPrefix}_url" value="${link.url}" />
                                                 </span>
                                             </div>
 
+                                            <!-- header with a pos addition button -->
+                                            <c:set var="posPrefix" value="${orgIndexedPrefix}_pos" />
+                                            <div class="form_div ${posPrefix}_header" style="">
+                                                <label class="form_label"></label>
+                                                <span class="form_span">
+                                                     <!-- TODO: js -->
+                                                    <button id="${posPrefix}_add" class="button_add pos_add">
+                                                        <img src="img/action/plus.svg" class="img_action">Добавить позицию</button>
+                                                </span>
+                                                <!-- for js -->
+                                                <input type="text" name="${posPrefix}_counter"
+                                                       class="editor_counter" value="${organization.positions.size()}" />
+                                                <input type="text" name="${posPrefix}_prefix"
+                                                       class="editor_prefix" value="${posPrefix}" />
+                                            </div>
+
+                                            <!-- positions wrapped in a fieldset flag -->
+                                            <div class="${posPrefix}_container" style="">
+                                                <c:forEach var="position" items="${organization.positions}" varStatus="posCounter">
+                                                    <jsp:useBean id="position" type="com.basejava.webapp.model.Position" />
+                                                    <c:set var="posIndexedPrefix" value="${posPrefix}_${posCounter.index}" />
+
+                                                    <fieldset id="${posIndexedPrefix}_fieldset">
+
+                                                        <!-- pos removal button -->
+                                                        <div class="form_div">
+                                                            <button id="${posIndexedPrefix}_remove" class="button_remove">
+                                                                <img src="img/action/cross.svg" class="img_action">Удалить позицию</button>
+                                                        </div>
+
+                                                        <!-- display inputs for position (TimeSpan.begin, TimeSpan.end, title, description) -->
+                                                        <div class="form_div">
+                                                            <label for="${posIndexedPrefix}_begin" class="form_label">Дата начала:</label>
+                                                            <span class="form_span">
+                                                                <input type="text" name="${posIndexedPrefix}_begin"
+                                                                       id="${posIndexedPrefix}_begin"
+                                                                       value="<%=DateUtil.format(position.getTimeSpan().getBegin())%>"
+                                                                       placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;" />
+                                                            </span>
+                                                        </div>
+
+                                                        <div class="form_div">
+                                                            <label for="${posIndexedPrefix}_end" class="form_label">Дата окончания:</label>
+                                                            <span class="form_span">
+                                                                <input type="text" name="${posIndexedPrefix}_end"
+                                                                       id="${posIndexedPrefix}_end"
+                                                                       value="<%=DateUtil.format(position.getTimeSpan().getEnd())%>"
+                                                                       placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;" />
+                                                            </span>
+                                                        </div>
+
+                                                        <div class="form_div">
+                                                            <label for="${posIndexedPrefix}_title" class="form_label">Должность:</label>
+                                                            <span class="form_span">
+                                                                <textarea name="${posIndexedPrefix}_title" id="${posIndexedPrefix}_title"
+                                                                          class="textarea_single_line">${position.title}</textarea>
+                                                            </span>
+                                                        </div>
+
+                                                        <div class="form_div">
+                                                            <label for="${posIndexedPrefix}_desc" class="form_label">Описание:</label>
+                                                            <span class="form_span">
+                                                                <textarea name="${posIndexedPrefix}_desc" id="${posIndexedPrefix}_desc"
+                                                                        >${position.description}</textarea>
+                                                            </span>
+                                                        </div>
+
+                                                    </fieldset>
+                                                </c:forEach>
+                                            </div>
 
                                         </fieldset>
                                     </c:forEach>
@@ -174,19 +246,6 @@
                         </c:choose>
                     </c:forEach>
                 </p>
-
-                <!--
-                <br>
-                <dl>
-                    <dt>поле раз:</dt>
-                    <dd><input type="text" name="TESTFIELD" size=50 value="${resume.fullName}"></dd>
-                </dl>
-                <dl>
-                    <dt>поле два-с:</dt>
-                    <dd><input type="text" name="TESTFIELD" size=50 value="${resume.fullName}"></dd>
-                </dl>
-                -->
-                <!-- params with the same name can be retrieved using request.getParameterValues(name) -->
 
                 <hr />
                 <button type="submit" class="button_submit">Сохранить</button>

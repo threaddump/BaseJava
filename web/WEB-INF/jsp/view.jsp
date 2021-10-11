@@ -128,7 +128,7 @@
                                         <c:if test="${not empty posDescription}">
                                             <tr>
                                                 <td class="td_list_positions_1"></td>
-                                                <td class="td_list_positions_2">${position.description}</td>
+                                                <td class="td_list_positions_2"><p>${position.description}</p></td>
                                             </tr>
                                         </c:if>
                                     </c:forEach>

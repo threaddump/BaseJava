@@ -114,20 +114,23 @@
                                 <jsp:useBean id="orgSection" type="com.basejava.webapp.model.OrgSection" />
 
                                 <!-- section header with an org addition button -->
-                                <div class="form_div">
-                                    <label for="${sectionType.name()}_add_org" class="form_label">${sectionType.title}:</label>
-                                    <span class="form_span">
-                                        <!-- TODO: js -->
-                                        <button id="${sectionType.name()}_add_org" class="button_add"
-                                                onclick="alert('hi'); return false;">
-                                            <img src="img/action/plus.svg" class="img_action">Добавить организацию</button>
-                                    </span>
-                                    <!-- for js -->
-                                    <input type="hidden" name="${sectionType.name()}_org_counter" value="${orgSection.orgs.size()}">
+                                <div class="${sectionType.name()}_org_header" style="">
+                                    <div class="form_div">
+                                        <label for="${sectionType.name()}_add_org" class="form_label">${sectionType.title}:</label>
+                                        <span class="form_span">
+                                            <!-- TODO: js -->
+                                            <button id="${sectionType.name()}_add_org" class="button_add">
+                                                <img src="img/action/plus.svg" class="img_action">Добавить организацию</button>
+                                        </span>
+                                        <!-- for js -->
+                                        <input type="hidden" name="${sectionType.name()}_org_counter" value="${orgSection.orgs.size()}">
+                                    </div>
                                 </div>
 
                                 <!-- organizations wrapped in fieldset tag -->
                                 <div class="${sectionType.name()}_org_container" style="">
+
+                                    <!-- orgs -->
                                     <c:forEach var="organization" items="${orgSection.orgs}" varStatus="counter">
                                         <jsp:useBean id="organization" type="com.basejava.webapp.model.Organization" />
 

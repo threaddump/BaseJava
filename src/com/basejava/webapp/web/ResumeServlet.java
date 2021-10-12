@@ -92,7 +92,7 @@ public class ResumeServlet extends HttpServlet {
 
     private void handleCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = UUID.randomUUID().toString();
-        Resume r = new Resume("Имя Фамилия");
+        Resume r = new Resume("");
         populateEmptySections(r);
         request.setAttribute("resume", r);
         request.setAttribute("storageAction", "save");
@@ -196,6 +196,7 @@ public class ResumeServlet extends HttpServlet {
             String contactValue = request.getParameter(contactType.name());
             if (!HtmlUtils.isNullOrEmpty(contactValue)) {
                 contactValue = HtmlUtils.escapeHtml(contactValue);
+                contactValue = HtmlUtils.normalizeContact(contactType, contactValue);
                 r.setContact(contactType, contactValue);
             } else {
                 r.removeContact(contactType);

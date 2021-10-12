@@ -1,9 +1,22 @@
 package com.basejava.webapp.util;
 
+import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Link;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public final class HtmlUtils {
+
+    private static final Map<ContactType, String> URL_PREFIXES_TO_STRIP = new HashMap<>();
+
+    static {
+        URL_PREFIXES_TO_STRIP.put(ContactType.LINKEDIN, "https://www.linkedin.com/in/");
+        URL_PREFIXES_TO_STRIP.put(ContactType.GITHUB, "https://github.com/");
+        URL_PREFIXES_TO_STRIP.put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/");
+    }
 
     private HtmlUtils() {
     }
@@ -33,5 +46,10 @@ public final class HtmlUtils {
 
     public static String makeHref(Link link) {
         return makeHref(link.getTitle(), link.getUrl());
+    }
+
+    public static String normalizeContact(ContactType type, String contact) {
+        String prefix = URL_PREFIXES_TO_STRIP.get(type);
+        return (prefix == null) ? contact : StringUtils.removeStart(contact, prefix);
     }
 }

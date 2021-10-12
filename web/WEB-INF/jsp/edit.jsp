@@ -51,7 +51,7 @@
                 <div class="form_div">
                     <label for="fullName" class="form_label">Имя:</label>
                     <span class="form_span">
-                        <input type="text" name="fullName" id="fullName" value="${resume.fullName}" required />
+                        <input type="text" name="fullName" id="fullName" value="${resume.fullName}" placeholder="Имя Фамилия" required />
                     </span>
                 </div>
 
@@ -187,7 +187,7 @@
                                                                 <input type="text" name="${posIndexedPrefix}_begin"
                                                                        id="${posIndexedPrefix}_begin"
                                                                        value="<%=DateUtils.format(position.getTimeSpan().getBegin())%>"
-                                                                       placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;" />
+                                                                       placeholder="Дата в формате MM/yyyy (например, 10/2001) или &quot;Сейчас&quot;" />
                                                             </span>
                                                         </div>
 
@@ -197,7 +197,7 @@
                                                                 <input type="text" name="${posIndexedPrefix}_end"
                                                                        id="${posIndexedPrefix}_end"
                                                                        value="<%=DateUtils.format(position.getTimeSpan().getEnd())%>"
-                                                                       placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;" />
+                                                                       placeholder="Дата в формате MM/yyyy (например, 10/2001) или &quot;Сейчас&quot;" />
                                                             </span>
                                                         </div>
 

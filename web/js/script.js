@@ -170,6 +170,16 @@ var genPositionEditor = function (p) {
 
 // --------------------------------------------------------------------------------------------
 
+// probably, not a good solution, but doing this in jsp or in jsp+java requires more code
+
+function set_placeholders() {
+    $('#LINKEDIN').attr('placeholder', 'https://www.linkedin.com/in/...');
+    $('#GITHUB').attr('placeholder', 'https://github.com/...');
+    $('#STACKOVERFLOW').attr('placeholder', 'https://stackoverflow.com/users/...');
+}
+
+// --------------------------------------------------------------------------------------------
+
 $(document).ready(function() {
     setup_textarea_handlers();
 
@@ -183,6 +193,8 @@ $(document).ready(function() {
 
     set_add_button_handler('.EXPERIENCE_org_container', '.pos_add', genPositionEditor);
     set_add_button_handler('.EDUCATION_org_container', '.pos_add', genPositionEditor);
+
+    set_placeholders();
 
     console.debug('Editor initialized');
 });

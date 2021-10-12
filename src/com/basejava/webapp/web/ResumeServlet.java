@@ -80,9 +80,12 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/jsp/ack_delete.jsp").forward(request, response);
     }
 
-    private void handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String uuid = request.getParameter("uuid");
-        checkLockedUuid(uuid);
+        if (isLockedUuid(uuid)) {
+            handleProtected(request, response);
+            return;
+        }
         storage.delete(uuid);
         response.sendRedirect("resume");
     }
@@ -98,7 +101,10 @@ public class ResumeServlet extends HttpServlet {
 
     private void handleEdit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String uuid = request.getParameter("uuid");
-        checkLockedUuid(uuid);
+        if (isLockedUuid(uuid)) {
+            handleProtected(request, response);
+            return;
+        }
         Resume r = storage.get(uuid);
         populateEmptySections(r);
         request.setAttribute("resume", r);
@@ -106,13 +112,23 @@ public class ResumeServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
     }
 
-    private void checkLockedUuid(String uuid) {
-        if (uuid == null) return;
+    private void handleProtected(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String uuid = request.getParameter("uuid");
+        Resume r = storage.get(uuid);
+        request.setAttribute("resume", r);
+        request.getRequestDispatcher("/WEB-INF/jsp/protected.jsp").forward(request, response);
+    }
+
+    private boolean isLockedUuid(String uuid) {
+        if (uuid == null) {
+            return false;
+        };
         for (String uuidToCheck : lockedUuids.split(",")) {
             if (uuid.equals(uuidToCheck)) {
-                throw new IllegalStateException("Resume for uuid=" + uuid + " is locked from changes");
+                return true;
             }
         }
+        return false;
     }
 
     private void populateEmptySections(Resume r) {

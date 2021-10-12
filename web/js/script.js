@@ -144,13 +144,13 @@ var genPositionEditor = function (p) {
             '    <div class="form_div">\n' +
             '        <label for="' + p + '_begin" class="form_label">Дата начала:</label>\n' +
             '        <span class="form_span">\n' +
-            '            <input type="text" name="' + p + '_begin" id="' + p + '_begin" value="" placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;">\n' +
+            '            <input type="text" name="' + p + '_begin" id="' + p + '_begin" value="" placeholder="Дата в формате MM/yyyy (например, 10/2001) или &quot;Сейчас&quot;">\n' +
             '        </span>\n' +
             '    </div>\n' +
             '    <div class="form_div">\n' +
             '        <label for="' + p + '_end" class="form_label">Дата окончания:</label>\n' +
             '        <span class="form_span">\n' +
-            '            <input type="text" name="' + p + '_end" id="' + p + '_end" value="" placeholder="Дата в формате MM/yyyy или &quot;Сейчас&quot;">\n' +
+            '            <input type="text" name="' + p + '_end" id="' + p + '_end" value="" placeholder="Дата в формате MM/yyyy (например, 10/2001) или &quot;Сейчас&quot;">\n' +
             '        </span>\n' +
             '    </div>\n' +
             '    <div class="form_div">\n' +

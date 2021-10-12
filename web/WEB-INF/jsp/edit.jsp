@@ -1,20 +1,9 @@
-<%@ page import="com.basejava.webapp.model.Resume" %>
-<%@ page import="com.basejava.webapp.model.ContactType" %>
-<%@ page import="com.basejava.webapp.model.SectionType" %>
-<%@ page import="com.basejava.webapp.model.Section" %>
-<%@ page import="com.basejava.webapp.model.TextSection" %>
-<%@ page import="com.basejava.webapp.model.ListSection" %>
-<%@ page import="com.basejava.webapp.model.OrgSection" %>
-<%@ page import="com.basejava.webapp.model.Organization" %>
-<%@ page import="com.basejava.webapp.model.Link" %>
-<%@ page import="com.basejava.webapp.model.Position" %>
+<%@ page import="com.basejava.webapp.model.*" %>
 <%@ page import="com.basejava.webapp.web.HtmlSnippets" %>
 <%@ page import="com.basejava.webapp.util.HtmlUtils" %>
 <%@ page import="com.basejava.webapp.util.DateUtils" %>
-<%@ page import="com.basejava.webapp.util.DateUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -44,11 +33,11 @@
         <!-- menu; sorry for the div -->
         <td class="td_main_section_menu">
             <div class="rasporka"></div>
-            <p><%=HtmlSnippets.getCreateLink()%></p>
-            <p><%=HtmlSnippets.getListLink()%></p>
+            <p><a href="resume?action=create"><img src="img/action/plus.svg" class="img_action">Новое резюме</a></p>
+            <p><a href="resume?action=list"><img src="img/action/back.svg" class="img_action">Назад к списку</a></p>
             <%if (storageAction.equals("update")) {%>
-                <p><%=HtmlSnippets.getViewLink(resume.getUuid())%></p>
-                <p><%=HtmlSnippets.getAckDeleteLink(resume.getUuid())%></p>
+                <p><a href="resume?uuid=${resume.uuid}&action=view"><img src="img/action/eye.svg" class="img_action">Назад к резюме</a></p>
+                <p><a href="resume?uuid=${resume.uuid}&action=ack_delete"><img src="img/action/cross.svg" class="img_action">Удалить</a></p>
             <%} %>
         </td>
 
@@ -177,7 +166,7 @@
                                                        class="editor_prefix" value="${posPrefix}" />
                                             </div>
 
-                                            <!-- positions wrapped in a fieldset flag -->
+                                            <!-- positions wrapped in a fieldset tag -->
                                             <div class="${posPrefix}_container" style="">
                                                 <c:forEach var="position" items="${organization.positions}" varStatus="posCounter">
                                                     <jsp:useBean id="position" type="com.basejava.webapp.model.Position" />

@@ -19,7 +19,7 @@
         <!-- menu; sorry for the div -->
         <td class="td_main_section_menu">
             <div class="rasporka"></div>
-            <p><%=HtmlSnippets.getCreateLink()%></p>
+            <p><a href="resume?action=create"><img src="img/action/plus.svg" class="img_action">Новое резюме</a></p>
         </td>
 
         <!-- content -->

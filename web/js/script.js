@@ -120,8 +120,8 @@ var genOrganizationEditor = function (p) {
             '            <button id="' + p + '_pos_add" class="button_add pos_add">\n' +
             '            <img src="img/action/plus.svg" class="img_action">Добавить позицию</button>\n' +
             '        </span>\n' +
-            '        <input type="' + text_or_hidden + '" name="' + p + '_pos_counter" class="editor_counter" value="0" style="background: yellow;">\n' +
-            '        <input type="' + text_or_hidden + '" name="' + p + '_pos_prefix" class="editor_prefix" value="' + p + '_pos" style="background: yellow;">\n' +
+            '        <input type="' + text_or_hidden + '" name="' + p + '_pos_counter" class="editor_counter" value="0">\n' +
+            '        <input type="' + text_or_hidden + '" name="' + p + '_pos_prefix" class="editor_prefix" value="' + p + '_pos">\n' +
             '    </div>\n' +
             '    <!-- positions wrapped in a fieldset flag -->\n' +
             '    <div class="' + p + '_pos_container" style="">\n' +

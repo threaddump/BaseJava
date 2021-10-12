@@ -26,10 +26,10 @@
         <!-- menu; sorry for the div -->
         <td class="td_main_section_menu">
             <div class="rasporka"></div>
-            <p><%=HtmlSnippets.getCreateLink()%></p>
-            <p><%=HtmlSnippets.getListLink()%></p>
-            <p><%=HtmlSnippets.getEditLink(resume.getUuid())%></p>
-            <p><%=HtmlSnippets.getAckDeleteLink(resume.getUuid())%></p>
+            <p><a href="resume?action=create"><img src="img/action/plus.svg" class="img_action">Новое резюме</a></p>
+            <p><a href="resume?action=list"><img src="img/action/back.svg" class="img_action">Назад к списку</a></p>
+            <p><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/action/edit.svg" class="img_action">Изменить</a></p>
+            <p><a href="resume?uuid=${resume.uuid}&action=ack_delete"><img src="img/action/cross.svg" class="img_action">Удалить</a></p>
         </td>
 
         <!-- content -->

@@ -2,29 +2,9 @@ package com.basejava.webapp.web;
 
 public class HtmlSnippets {
 
-    public static String getCreateLink() {
-        return "<a href=\"resume?action=create\"><img src=\"img/action/plus.svg\" class=\"img_action\">Новое резюме</a>";
-    }
-
-    public static String getListLink() {
-        return "<a href=\"resume?action=list\"><img src=\"img/action/back.svg\" class=\"img_action\">Назад к списку</a>";
-    }
-
-    public static String getViewLink(String uuid) {
-        return "<a href=\"resume?uuid=" + uuid + "&action=view\"><img src=\"img/action/eye.svg\" class=\"img_action\">Назад к резюме</a>";
-    }
-
-    public static String getEditLink(String uuid) {
-        return "<a href=\"resume?uuid=" + uuid + "&action=edit\"><img src=\"img/action/edit.svg\" class=\"img_action\">Изменить</a>";
-    }
-
     public static String getEditButton(String uuid) {
         return "<a href=\"resume?uuid=" + uuid + "&action=edit\" " + getToolTipAttributes("edit_" + uuid) +
                 "><img src=\"img/action/edit.svg\" class=\"img_action\"></a>" + getToolTipBubble("edit_" + uuid, "Изменить");
-    }
-
-    public static String getAckDeleteLink(String uuid) {
-        return "<a href=\"resume?uuid=" + uuid + "&action=ack_delete\"><img src=\"img/action/cross.svg\" class=\"img_action\">Удалить</a>";
     }
 
     public static String getAckDeleteButton(String uuid) {

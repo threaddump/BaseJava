@@ -6,19 +6,28 @@
 
 // Some stuff for <textarea>
 
-function auto_height(obj) {
+function autoHeight(obj) {
     obj.style.height = '1px';
     obj.style.height = (2 + obj.scrollHeight) + 'px';
 }
 
-function strip_newline(obj) {
+function stripNewline(obj) {
     obj.value = obj.value.replace(/\n/g,'');
 }
 
-function setup_textarea_handlers() {
-    $(document).on('input', '.textarea_single_line', function (e) { strip_newline(this); });
-    $(document).on('focus', 'textarea', function (e) { auto_height(this); });
-    $(document).on('input', 'textarea', function (e) { auto_height(this); });
+function setupTextareaHandlers() {
+    $(document).on('input', '.textarea_single_line', function (e) { stripNewline(this); });
+    $(document).on('focus', 'textarea', function (e) { autoHeight(this); });
+    $(document).on('input', 'textarea', function (e) { autoHeight(this); });
+}
+
+// --------------------------------------------------------------------------------------------
+
+// probably, not a good solution, but doing this in jsp or in jsp+java requires more code
+function setPlaceholders() {
+    $('#LINKEDIN').attr('placeholder', 'https://www.linkedin.com/in/...');
+    $('#GITHUB').attr('placeholder', 'https://github.com/...');
+    $('#STACKOVERFLOW').attr('placeholder', 'https://stackoverflow.com/users/...');
 }
 
 // --------------------------------------------------------------------------------------------
@@ -29,24 +38,24 @@ function setup_textarea_handlers() {
 // Internal editor state is held in hidden inputs (we use a pair for each "add" button).
 // The code for "remove" buttons is universal.
 
-function is_editor_debugged() {
+function isEditorDebugged() {
     return false;
 }
 
-function show_hidden_inputs() {
+function showHiddenInputs() {
     $('input[type="hidden"]').each(function() { this.type = 'text'; });
 }
 
-function highlight_editor_states() {
-    if (is_editor_debugged()) {
-        show_hidden_inputs();
+function highlightEditorStates() {
+    if (isEditorDebugged()) {
+        showHiddenInputs();
 
         $('.editor_counter').css('background', 'yellow');
         $('.editor_prefix').css('background', 'yellow');
     }
 }
 
-function set_remove_button_handler(container_cls, button_cls) {
+function setRemoveButtonHandler(container_cls, button_cls) {
     $($(container_cls)).on('click', button_cls, function (e) {
         e.preventDefault();
 
@@ -54,8 +63,8 @@ function set_remove_button_handler(container_cls, button_cls) {
     });
 }
 
-function set_add_button_handler(root_cls, button_cls, gen_editor_part) {
-    var debug = is_editor_debugged();
+function setAddButtonHandler(root_cls, button_cls, gen_editor_part) {
+    var debug = isEditorDebugged();
 
     var root = $(root_cls);
     if (debug) { root.css('background', 'yellow'); }
@@ -88,11 +97,11 @@ function set_add_button_handler(root_cls, button_cls, gen_editor_part) {
 // Prefix (p) is an "indexed prefix" according to edit.jsp notation.
 
 var genOrganizationEditor = function (p) {
-    if (is_editor_debugged()) {
-        is_editor_debugged('Creating OrganizationEditor for prefix=' + p);
+    if (isEditorDebugged()) {
+        console.debug('Creating OrganizationEditor for prefix=' + p);
     }
 
-    var text_or_hidden = is_editor_debugged() ? 'text' : 'hidden';
+    var text_or_hidden = isEditorDebugged() ? 'text' : 'hidden';
 
     return  '<fieldset id="' + p + '_fieldset">\n' +
             '    <!-- org removal button -->\n' +
@@ -130,8 +139,8 @@ var genOrganizationEditor = function (p) {
 }
 
 var genPositionEditor = function (p) {
-    if (is_editor_debugged()) {
-        is_editor_debugged('Creating PositionEditor for prefix=' + p);
+    if (isEditorDebugged()) {
+        console.debug('Creating PositionEditor for prefix=' + p);
     }
 
     return  '<fieldset id="' + p + '_fieldset">\n' +
@@ -170,31 +179,21 @@ var genPositionEditor = function (p) {
 
 // --------------------------------------------------------------------------------------------
 
-// probably, not a good solution, but doing this in jsp or in jsp+java requires more code
-
-function set_placeholders() {
-    $('#LINKEDIN').attr('placeholder', 'https://www.linkedin.com/in/...');
-    $('#GITHUB').attr('placeholder', 'https://github.com/...');
-    $('#STACKOVERFLOW').attr('placeholder', 'https://stackoverflow.com/users/...');
-}
-
-// --------------------------------------------------------------------------------------------
-
 $(document).ready(function() {
-    setup_textarea_handlers();
+    setupTextareaHandlers();
 
-    highlight_editor_states();
+    setPlaceholders();
 
-    set_remove_button_handler('.EXPERIENCE_org_container', '.button_remove');
-    set_remove_button_handler('.EDUCATION_org_container', '.button_remove');
+    highlightEditorStates();
 
-    set_add_button_handler('.EXPERIENCE_org_header', '.org_add', genOrganizationEditor);
-    set_add_button_handler('.EDUCATION_org_header', '.org_add', genOrganizationEditor);
+    setRemoveButtonHandler('.EXPERIENCE_org_container', '.button_remove');
+    setRemoveButtonHandler('.EDUCATION_org_container', '.button_remove');
 
-    set_add_button_handler('.EXPERIENCE_org_container', '.pos_add', genPositionEditor);
-    set_add_button_handler('.EDUCATION_org_container', '.pos_add', genPositionEditor);
+    setAddButtonHandler('.EXPERIENCE_org_header', '.org_add', genOrganizationEditor);
+    setAddButtonHandler('.EDUCATION_org_header', '.org_add', genOrganizationEditor);
 
-    set_placeholders();
+    setAddButtonHandler('.EXPERIENCE_org_container', '.pos_add', genPositionEditor);
+    setAddButtonHandler('.EDUCATION_org_container', '.pos_add', genPositionEditor);
 
     console.debug('Editor initialized');
 });

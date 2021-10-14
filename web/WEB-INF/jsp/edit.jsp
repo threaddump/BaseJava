@@ -12,8 +12,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="js/script.js"></script>
 
-    <jsp:useBean id="resume" type="com.basejava.webapp.model.Resume" scope="request"/>
-    <jsp:useBean id="storageAction" type="java.lang.String" scope="request"/>
+    <jsp:useBean id="resume" type="com.basejava.webapp.model.Resume" scope="request" />
+    <jsp:useBean id="storageAction" type="java.lang.String" scope="request" />
 
     <%if (storageAction.equals("update")) {%>
         <title>Редактирование резюме ${resume.fullName}</title>
